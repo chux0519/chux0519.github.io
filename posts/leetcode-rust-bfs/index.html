@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="chrome=1"><meta name=HandheldFriendly content="True"><meta name=MobileOptimized content="320"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=referrer content="no-referrer"><meta name=description content="Coding.."><title>Leetcode Rust Bfs - chux0519</title><link rel="shortcut icon" href=/hexyoungs.ico><link rel=stylesheet href=/css/main.min.81bbafc4df93b11c1c3e2449464373c384aa4903731b4fc7a77dfcdd979e184f.css integrity="sha256-gbuvxN+TsRwcPiRJRkNzw4SqSQNzG0/Hp3383ZeeGE8=" crossorigin=anonymous media=screen><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Didact+Gothic"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://chux0519.github.io/hexyoungs.png"><meta name=twitter:title content="Leetcode Rust Bfs"><meta name=twitter:description content="算法系列 - BFS BFS 指广度优先搜索，是一种遍历树、图的方法。
+BFS 通常会和队列相关，但不完全等于队列。以下是我在 leetcode 刷题后的整理。
+层级相关 首先存在一类题目，通常会和树的层级遍历相关，这类型的题目是存在固定解题模式的。
+首先定义节点
+#[derive(Debug, PartialEq, Eq)] pub struct TreeNode { pub val: i32, pub left: Option<Rc<RefCell<TreeNode>>>, pub right: Option<Rc<RefCell<TreeNode>>>, } 然后模板通常为以下，或稍微有些变化，但主体框架都是一致的。
+// root: Option<Rc<RefCell<TreeNode>>> let mut q = VecDeque::new(); q.push_back(root); while !q.is_empty() { // 每一层  let mut level = Vec::new(); for _ in 0..q.len() { // 在遍历过程中，q 会被更新，进入下一层  let front = q.pop_front().unwrap(); if let Some(f) = front { let f = f."><meta property="og:title" content="Leetcode Rust Bfs"><meta property="og:description" content="算法系列 - BFS BFS 指广度优先搜索，是一种遍历树、图的方法。
+BFS 通常会和队列相关，但不完全等于队列。以下是我在 leetcode 刷题后的整理。
+层级相关 首先存在一类题目，通常会和树的层级遍历相关，这类型的题目是存在固定解题模式的。
+首先定义节点
+#[derive(Debug, PartialEq, Eq)] pub struct TreeNode { pub val: i32, pub left: Option<Rc<RefCell<TreeNode>>>, pub right: Option<Rc<RefCell<TreeNode>>>, } 然后模板通常为以下，或稍微有些变化，但主体框架都是一致的。
+// root: Option<Rc<RefCell<TreeNode>>> let mut q = VecDeque::new(); q.push_back(root); while !q.is_empty() { // 每一层  let mut level = Vec::new(); for _ in 0..q.len() { // 在遍历过程中，q 会被更新，进入下一层  let front = q.pop_front().unwrap(); if let Some(f) = front { let f = f."><meta property="og:type" content="article"><meta property="og:url" content="https://chux0519.github.io/posts/leetcode-rust-bfs/"><meta property="og:image" content="https://chux0519.github.io/hexyoungs.png"><meta property="article:published_time" content="2019-10-22T22:40:20+08:00"><meta property="article:modified_time" content="2019-10-22T22:40:20+08:00"><meta property="og:site_name" content="chux0519"><title>Leetcode Rust Bfs</title></head><body><div class=wrap><div class=section id=title>Leetcode Rust Bfs</div><div class=section id=content>Tue Oct 22, 2019 &#183; 113 words<div class=tag-container><span class=tag><a href=https://chux0519.github.io/tags/rust>rust</a></span>
+<span class=tag><a href=https://chux0519.github.io/tags/leetcode>leetcode</a></span></div><hr><h2 id=算法系列---bfs>算法系列 - BFS</h2><p>BFS 指广度优先搜索，是一种遍历树、图的方法。</p><p>BFS 通常会和队列相关，但不完全等于队列。以下是我在 leetcode 刷题后的整理。</p><h2 id=层级相关>层级相关</h2><p>首先存在一类题目，通常会和树的层级遍历相关，这类型的题目是存在固定解题模式的。</p><p>首先定义节点</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#75715e>#[</span><span style=color:#75715e>derive(Debug, PartialEq, Eq)</span><span style=color:#75715e>]</span>
+<span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>TreeNode</span> {
+    <span style=color:#66d9ef>pub</span> val: <span style=color:#66d9ef>i32</span>,
+    <span style=color:#66d9ef>pub</span> left: Option<span style=color:#f92672>&lt;</span>Rc<span style=color:#f92672>&lt;</span>RefCell<span style=color:#f92672>&lt;</span>TreeNode<span style=color:#f92672>&gt;</span><span style=color:#f92672>&gt;</span><span style=color:#f92672>&gt;</span>,
+    <span style=color:#66d9ef>pub</span> right: Option<span style=color:#f92672>&lt;</span>Rc<span style=color:#f92672>&lt;</span>RefCell<span style=color:#f92672>&lt;</span>TreeNode<span style=color:#f92672>&gt;</span><span style=color:#f92672>&gt;</span><span style=color:#f92672>&gt;</span>,
+}
+</code></pre></div><p>然后模板通常为以下，或稍微有些变化，但主体框架都是一致的。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#75715e>// root: Option&lt;Rc&lt;RefCell&lt;TreeNode&gt;&gt;&gt;
+</span><span style=color:#75715e></span><span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> q <span style=color:#f92672>=</span> VecDeque::new();
+q.push_back(root);
+<span style=color:#66d9ef>while</span> <span style=color:#f92672>!</span>q.is_empty() {
+    <span style=color:#75715e>// 每一层
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> level <span style=color:#f92672>=</span> Vec::new();
+    <span style=color:#66d9ef>for</span> _ <span style=color:#66d9ef>in</span> <span style=color:#ae81ff>0</span>..q.len() {
+        <span style=color:#75715e>// 在遍历过程中，q 会被更新，进入下一层
+</span><span style=color:#75715e></span>        <span style=color:#66d9ef>let</span> front <span style=color:#f92672>=</span> q.pop_front().unwrap();
+        <span style=color:#66d9ef>if</span> <span style=color:#66d9ef>let</span> Some(f) <span style=color:#f92672>=</span> front {
+            <span style=color:#66d9ef>let</span> f <span style=color:#f92672>=</span> f.borrow();
+            level.push(f.val);
+            <span style=color:#66d9ef>if</span> f.left.is_some() {
+                q.push_back(f.left.clone());
+            }
+            <span style=color:#66d9ef>if</span> f.right.is_some() {
+                q.push_back(f.right.clone());
+            }
+        }
+    }
+    <span style=color:#75715e>// 可能会有其他逻辑
+</span><span style=color:#75715e></span>}
+</code></pre></div><p>属于这类型的题目有： q102, q103, q107, q111</p><h2 id=和其他思想结合>和其他思想结合</h2><p>除了一眼能看拿出来的层级遍历结构，某些题会使用到其他的数据结构或是思想。比如利用 hashset 进行缓存，然后在层级中做某些事情。</p><p>这类型的题型有：126, 127</p><p>对于这类特征不太明显的题目，只需要记得，比如最短路径、最近距离之类的描述，可以想想是不是和一用 BFS 的框架来思考就行了。</p><p>另外值得一提的是 127 题和 126 题的思路稍微有点不同，对于 126 题，它的维度要更高一点，即，想的时候，把返回结果的每个元素当成 BFS 的对象，这样可以稍作改动，减轻思考深度负担。</p><p>126 卡了我很久，这个<a href=https://leetcode.com/problems/word-ladder-ii/discuss/40434/C%2B%2B-solution-using-standard-BFS-method-no-DFS-or-backtracking>链接</a>可以看到比较容易理解、纯粹的 BFS。</p></div><div class="section bottom-menu"><hr><p><a href=/posts>back</a>
+&#183;
+<a href=/posts>文章</a>
+&#183;
+<a href=/tags>标签</a>
+&#183;
+<a href=https://chux0519.github.io/>/</a></p></div><div class="section footer">chux0519</div></div></body></html>
