@@ -1,4 +1,34 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>chux0519</title><link>https://chux0519.github.io/</link><description>Recent content on chux0519</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 22 Oct 2019 22:40:20 +0800</lastBuildDate><atom:link href="https://chux0519.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Leetcode Rust Bfs</title><link>https://chux0519.github.io/posts/leetcode-rust-bfs/</link><pubDate>Tue, 22 Oct 2019 22:40:20 +0800</pubDate><guid>https://chux0519.github.io/posts/leetcode-rust-bfs/</guid><description>算法系列 - BFS BFS 指广度优先搜索，是一种遍历树、图的方法。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>chux0519</title><link>https://chux0519.github.io/</link><description>Recent content on chux0519</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 02 Apr 2020 14:43:09 +0800</lastBuildDate><atom:link href="https://chux0519.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>新的个人站</title><link>https://chux0519.github.io/posts/new-page/</link><pubDate>Thu, 02 Apr 2020 14:43:09 +0800</pubDate><guid>https://chux0519.github.io/posts/new-page/</guid><description>新的个人站 最近看到司徒正美去世的消息，有点惋惜又有点惆怅。惋惜的是天妒英才，惆怅的是好歹大佬离开时留下了一些好的书、一些好的框架，让人们都记得他，而这世上大多数人离开时，可能不会留有一点痕迹。同时又让人警醒，工作和生活，事业和身体，都要注意好平衡。
+隔了很久，翻出了很久之前的准备用来记录博客的 repo，直到租的机器过期了，博客还是没有几篇。随着时间推移，自己越来越不愿意折腾，趁着一时兴起，今天就把博客（日记）折腾一下，搭起来，用一下，希望做到”留下点什么“。
+解决方案 博客的生成方案，我还是采用静态网站生成器，这里使用到的是 hugo。网站的部署方案分为两条线，一是使用 github pages 来做静态网站，二是用自己的一台服务器做镜像。
+github pages 不了解的朋友可以看下面的参考链接，简单的说就是 github 为用户提供了便利，使用 $username.github.io 为名字的 repo，会自动使用 repo 内容的 master 分支作为 root，如果内容合法就可以在 $username.github.io 这个链接上访问得到内容。
+这一次和往常不同的是，我的源代码和 hugo 最后打包出来的静态网站内容都是放在这个 repo 下的，通过 github 的 action，监听 release 分支的提交，然后触发编译，最后部署到 master 分支。整个过程显得很流畅，体验很好。后面有机会我会单独再深入讲一下如何配置 action 做到这 commit 后自动 build 和部署。
+同步 我自己其实最近在某提供商租了一台机器，于是想要做同步。其实做法很简单，利用 nginx 起一个静态站点，然后设置一个 crontab 任务，定时地同步上面提到的 $username.github.io repo，rsync 内容到 nginx 的网站目录下即可。
+参考链接 Working with GitHub Pages github actions peaceiris/actions-hugo workflow 内容示例 hugo</description></item><item><title>Leetcode Rust Easy</title><link>https://chux0519.github.io/posts/leetcode-rust-easy/</link><pubDate>Tue, 17 Dec 2019 10:37:14 +0800</pubDate><guid>https://chux0519.github.io/posts/leetcode-rust-easy/</guid><description>算法系列 简单题
+这里记录刷简单题过程中感到有意思的题目
+Maximum subarray problem 这类型的题目描述在：wiki
+算法还有一个名称，叫做 Kadane's algorithm。在刷到 leetcode 的 121 和 122 题目时，卡住了，不像其他类型的题目，看完题目后就会有比较清晰的想法，直接实现即可。这里学习的思想主要是累加，即给出一个数组，要算法求出获利最大，即 A[n] - A[m] 最大(n &amp;gt; m)
+核心是等式
+A[n] - A[m] = A[n] - A[n-1] + A[n-1] - A[n-2] + .. + A[m+1] - A[m]
+异或操作 异或操作符实际上也很有意思，某些题目可能会在题目提示，时间复杂度和空闲复杂度，和能够直接想到的解法通常相差较大。
+比如 #136-single-number
+核心就是异或操作的特殊性，一个数在对自己异或的时候，实际会清零，这在汇编里面常用来清空寄存器。
+链表找环 141 题，找链表是否存在环，使用快慢指针即可
+链表找交叉点 160题，找链表交叉点。 需要解决的问题是，两个链表的长度不一定相同，要想办法使它们能够进行比较。
+这里的解法参考： 讨论区</description></item><item><title>Raspi3 Os 02</title><link>https://chux0519.github.io/posts/raspi3-os-02/</link><pubDate>Sun, 24 Nov 2019 15:52:14 +0800</pubDate><guid>https://chux0519.github.io/posts/raspi3-os-02/</guid><description>这是基于树莓派学习操作系统的第二部分，之前打通了工具链，能够使用 clang 进行交叉编译，使用 qemu 进行运行。
+这一篇文章，期望完成
+C 语言的控制 Rust 的控制 使用 C 语言控制主要为了了解整个流程下面的细节，再换到抽象层次更高的 Rust，打通流程，了解原理后，会一直使用 Rust 进行开发了。
+C 语言介入 我们编写普通 C 程序时，其实 C 是有 runtime 的(crt)，它帮我们做了许多事情，准备好 .bss 段就是其中一件。
+在 bare metal 的世界里面，我们需要手动完成这件事。我们可以通过 linker script，定义好 bss 的内存布局，在 bss 的开始、结束处定义两个标记，然后通过代码进行初始化。
+Rust 工具链 安装 nightly 版本的工 rust 编译器 curl https://sh.rustup.rs -sSf \ | \ sh -s -- \ --default-toolchain nightly \ --component rust-src llvm-tools-preview clippy rustfmt rls rust-analysis cargo install cargo-xbuild cargo-binutils 这里使用 nightly，是因为我们用到的一些语法、工具链等特性都还在 nightly 下，包括以下（不完全）</description></item><item><title>Raspi3 Os 01</title><link>https://chux0519.github.io/posts/raspi3-os-01/</link><pubDate>Sat, 16 Nov 2019 16:24:14 +0800</pubDate><guid>https://chux0519.github.io/posts/raspi3-os-01/</guid><description>基于树莓派 3 的操作系统学习，第一部分。
+工具链 qemu 这是个模拟器，我们开发时，可以先用 qemu 模拟树莓派，不用每次真的用真机测试。 这里进行手动编译。
+./configure --target-list=aarch64-softmmu --enable-modules \ --enable-tcg-interpreter --enable-debug-tcg \ --python=/usr/bin/python2.7; \ clang &amp;amp; llvm clang 被设计时，定位就是 cross-compiler
+安装 llvm 主要是要使用到 llvm-objcopy
+另外还需要 lld
+编译：
+编译 asm clang &amp;ndash;target=aarch64-elf -Wall -O2 -ffreestanding -nostdinc -nostdlib -mcpu=cortex-a53+nosimd -c start.S -o start.o
+参数说明：
+--target=aarch64-elf，指编译的目标平台是 64 位的 arm 架构，elf 是一种可执行文件格式 -Wall，指打开诊断信息 -O2，指优化程度, O2 是中等程度的优化，可实现大多数优化 -ffreestanding，指代编译结果独立运行(bare metal)，没有 host -nostdinc 和 -nostdlib manual 没有讲清楚，个人理解是不包含标准库必须要包含的 flag -mcpu=cortex-a53+nosimd，树莓派 3b 的芯片是 BCM2837，属于 cortex-a53 的架构，nosimd 指不需要支持 simd。这里个人对 cortex-a53 和 BCM2837 的区别可能存在误解，个人理解是，BCM2837 是具体的一块芯片，而 cortex-a53 指代的是一种 arm 的架构或者说标准，如果我的理解有误，请通过邮件纠正我。 -c 指代生成 .</description></item><item><title>Leetcode Rust Bfs</title><link>https://chux0519.github.io/posts/leetcode-rust-bfs/</link><pubDate>Tue, 22 Oct 2019 22:40:20 +0800</pubDate><guid>https://chux0519.github.io/posts/leetcode-rust-bfs/</guid><description>算法系列 - BFS BFS 指广度优先搜索，是一种遍历树、图的方法。
 BFS 通常会和队列相关，但不完全等于队列。以下是我在 leetcode 刷题后的整理。
 层级相关 首先存在一类题目，通常会和树的层级遍历相关，这类型的题目是存在固定解题模式的。
 首先定义节点
