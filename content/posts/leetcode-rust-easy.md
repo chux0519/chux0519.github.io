@@ -2,7 +2,7 @@
 title: "Leetcode Rust Easy"
 date: 2019-12-17T10:37:14+08:00
 showDate: true
-draft: true
+draft: false
 tags: ["blog", "story"]
 ---
 

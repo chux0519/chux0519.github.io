@@ -2,7 +2,7 @@
 title: "Raspi3 Os 01"
 date: 2019-11-16T16:24:14+08:00
 showDate: true
-draft: true
+draft: false
 tags: ["blog", "story"]
 ---
 
