@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="chrome=1"><meta name=HandheldFriendly content="True"><meta name=MobileOptimized content="320"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=referrer content="no-referrer"><meta name=description content="Coding.."><title>Boost Asio 笔记 - chux0519</title><link rel="shortcut icon" href=/hexyoungs.ico><link rel=stylesheet href=/css/main.min.81bbafc4df93b11c1c3e2449464373c384aa4903731b4fc7a77dfcdd979e184f.css integrity="sha256-gbuvxN+TsRwcPiRJRkNzw4SqSQNzG0/Hp3383ZeeGE8=" crossorigin=anonymous media=screen><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Didact+Gothic"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://chux0519.github.io/hexyoungs.png"><meta name=twitter:title content="Boost Asio 笔记"><meta name=twitter:description content="boost asio 笔记 使用 boost asio 可以跨平台处理异步操作，这里对如何使用（异步）进行简单摘要
+异步操作  程序需要初始化一个 &ldquo;io object&rdquo;(socket)，将 socket 和其完成后的 handler 进行关联   socket.async_connect(server_endpoint, your_completion_handler);
+ 其中，your_completion_handler 函数签名是
+ void your_completion_handler(const boost::system::error_code& ec);
+  &ldquo;io object&rdquo; 将请求转交给 io_context
+  io_context 给操作系统发信号，说明现在开始发起一个异步的连接了
+  过了一段时间之后，操作系统发现连接请求完成了，它会把结果放进一个队列，这说明结果已经可用了，可以被 io_context 取出来了
+  程序必须调用 io_context::run() 来保证结果被取出来，需要注意的是，这个操作是 block 的。
+  当 io_context::run() 被调用的时候，它会取出结果，翻译 error_code 然后传给在 1 中定义的 handler
+  示意图如下
+Proactor 模式 不需要线程的并发模型，在 asio 中的实现大概如图下
+其中各个组件的职责/定义如下
+Asynchronous Operation 定义异步操作，比如异步读写一个 socket"><meta property="og:title" content="Boost Asio 笔记"><meta property="og:description" content="boost asio 笔记 使用 boost asio 可以跨平台处理异步操作，这里对如何使用（异步）进行简单摘要
+异步操作  程序需要初始化一个 &ldquo;io object&rdquo;(socket)，将 socket 和其完成后的 handler 进行关联   socket.async_connect(server_endpoint, your_completion_handler);
+ 其中，your_completion_handler 函数签名是
+ void your_completion_handler(const boost::system::error_code& ec);
+  &ldquo;io object&rdquo; 将请求转交给 io_context
+  io_context 给操作系统发信号，说明现在开始发起一个异步的连接了
+  过了一段时间之后，操作系统发现连接请求完成了，它会把结果放进一个队列，这说明结果已经可用了，可以被 io_context 取出来了
+  程序必须调用 io_context::run() 来保证结果被取出来，需要注意的是，这个操作是 block 的。
+  当 io_context::run() 被调用的时候，它会取出结果，翻译 error_code 然后传给在 1 中定义的 handler
+  示意图如下
+Proactor 模式 不需要线程的并发模型，在 asio 中的实现大概如图下
+其中各个组件的职责/定义如下
+Asynchronous Operation 定义异步操作，比如异步读写一个 socket"><meta property="og:type" content="article"><meta property="og:url" content="https://chux0519.github.io/posts/boost-asio/"><meta property="og:image" content="https://chux0519.github.io/hexyoungs.png"><meta property="article:published_time" content="2020-04-24T11:41:54+08:00"><meta property="article:modified_time" content="2020-04-24T11:41:54+08:00"><meta property="og:site_name" content="chux0519"><title>Boost Asio 笔记</title></head><body><div class=wrap><div class=section id=title>Boost Asio 笔记</div><div class=section id=content>Fri Apr 24, 2020 &#183; 116 words<div class=tag-container><span class=tag><a href=https://chux0519.github.io/tags/blog>blog</a></span>
+<span class=tag><a href=https://chux0519.github.io/tags/story>story</a></span></div><hr><h2 id=boost-asio-笔记>boost asio 笔记</h2><p>使用 boost asio 可以跨平台处理异步操作，这里对如何使用（异步）进行简单摘要</p><h2 id=异步操作>异步操作</h2><ol><li>程序需要初始化一个 &ldquo;io object&rdquo;(socket)，将 socket 和其完成后的 handler 进行关联</li></ol><blockquote><p>socket.async_connect(server_endpoint, your_completion_handler);</p></blockquote><p>其中，<code>your_completion_handler</code> 函数签名是</p><blockquote><p>void your_completion_handler(const boost::system::error_code& ec);</p></blockquote><ol start=2><li><p>&ldquo;io object&rdquo; 将请求转交给 <code>io_context</code></p></li><li><p><code>io_context</code> 给操作系统发信号，说明现在开始发起一个异步的连接了</p></li><li><p>过了一段时间之后，操作系统发现连接请求完成了，它会把结果放进一个队列，这说明结果已经可用了，可以被 <code>io_context</code> 取出来了</p></li><li><p>程序必须调用 <code>io_context::run()</code> 来保证结果被取出来，需要注意的是，这个操作是 block 的。</p></li><li><p>当 <code>io_context::run()</code> 被调用的时候，它会取出结果，翻译 <code>error_code</code> 然后传给在 1 中定义的 handler</p></li></ol><p>示意图如下</p><p><img src=./async_op1.png alt=async_op1.png>
+<img src=./async_op2.png alt=async_op2.png></p><h2 id=proactor-模式>Proactor 模式</h2><p>不需要线程的并发模型，在 asio 中的实现大概如图下</p><p><img src=./proactor.png alt=proactor></p><p>其中各个组件的职责/定义如下</p><h3 id=asynchronous-operation>Asynchronous Operation</h3><p>定义异步操作，比如异步读写一个 socket</p><h3 id=asynchronous-operation-processor>Asynchronous Operation Processor</h3><p>执行异步操作的地方，同时负责将操作完成事件放进 <code>Completion Event Queue</code>，一个例子就是 <code>reactive_socket_service</code></p><h3 id=completion-event-queue>Completion Event Queue</h3><p>是一个缓存队列，用户存储操作完成的事件，一直到 <code>Asynchronous Event Demultiplexer</code> 把它取出</p><h3 id=completion-handler>Completion Handler</h3><p>处理异步操作的结果，是 function 对象，通常使用 <code>boost::bind</code> 创建</p><h3 id=asynchronous-event-demultiplexer>Asynchronous Event Demultiplexer</h3><p>(阻塞地)等待 <code>Completion Event Queue</code> 中的事件发生，然后将完成事件传给调用者</p><h3 id=proactor>Proactor</h3><p>调用 <code>Asynchronous Event Demultiplexer</code> 去取完成事件，然后分发给 <code>Completion Handler</code>，通常 <code>io_context</code> 充当这个角色</p><h3 id=initiator>Initiator</h3><p>发起异步操作的业务代码，通常通过高层的接口进行调用，比如通过 <code>basic_stream_socket</code>，实际上底层是将其操作代理给了 <code>reactive_socket_service</code></p><h2 id=缺点>缺点</h2><p>优点不详述了（可移植性，解耦线程和并发等等），这里主要贴两个缺点</p><ol><li>很多组件让程序变得更复杂</li><li>内存的占用（queue 的出现使得内存占用变高，主要相对于 reactor 模式，reactor 模式在 socket 可读或可写时，都不会有额外的 buffer 的内存开销）</li></ol><h2 id=链接>链接</h2><ul><li><a href=https://www.boost.org/doc/libs/1_66_0/doc/html/boost_asio/overview/core/basics.html>boost_asio/overview/core/basics.html</a></li><li><a href=https://www.boost.org/doc/libs/1_66_0/doc/html/boost_asio/overview/core/async.html>boost_asio/overview/core/async.html</a></li></ul></div><div class="section bottom-menu"><hr><p><a href=/posts>back</a>
+&#183;
+<a href=/posts>文章</a>
+&#183;
+<a href=/tags>标签</a>
+&#183;
+<a href=https://chux0519.github.io/>/</a></p></div><div class="section footer">chux0519</div></div></body></html>
