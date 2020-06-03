@@ -6,9 +6,9 @@ draft: false
 tags: ["blog","story"]
 ---
 
-## boost asio 笔记
-
 使用 boost asio 可以跨平台处理异步操作，这里对如何使用（异步）进行简单摘要
+
+<!--more-->
 
 ## 异步操作
 

@@ -12,6 +12,8 @@ tags: ["blog", "story"]
 
 这里记录刷简单题过程中感到有意思的题目
 
+<!--more-->
+
 ## Maximum subarray problem
 
 这类型的题目描述在：[wiki](https://en.wikipedia.org/wiki/Maximum_subarray_problem#Kadane's_algorithm)

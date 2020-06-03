@@ -8,6 +8,9 @@ tags: ["blog","story"]
 
 这是 raspi-os 的第三篇，主要想要设置好 qemu 中的 uart，方便开发和调试。
 
+<!--more-->
+
+
 ## UART
 
 可以理解为是一种用于信息传输用的硬件，见[维基百科](https://zh.wikipedia.org/wiki/UART)
