@@ -1,46 +1,259 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>story on chux0519</title><link>https://chux0519.github.io/tags/story/</link><description>Recent content in story on chux0519</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 24 Apr 2020 11:41:54 +0800</lastBuildDate><atom:link href="https://chux0519.github.io/tags/story/index.xml" rel="self" type="application/rss+xml"/><item><title>Boost Asio 笔记</title><link>https://chux0519.github.io/posts/boost-asio/</link><pubDate>Fri, 24 Apr 2020 11:41:54 +0800</pubDate><guid>https://chux0519.github.io/posts/boost-asio/</guid><description>boost asio 笔记 使用 boost asio 可以跨平台处理异步操作，这里对如何使用（异步）进行简单摘要
-异步操作 程序需要初始化一个 &amp;ldquo;io object&amp;rdquo;(socket)，将 socket 和其完成后的 handler 进行关联 socket.async_connect(server_endpoint, your_completion_handler);
-其中，your_completion_handler 函数签名是
-void your_completion_handler(const boost::system::error_code&amp;amp; ec);
-&amp;ldquo;io object&amp;rdquo; 将请求转交给 io_context
-io_context 给操作系统发信号，说明现在开始发起一个异步的连接了
-过了一段时间之后，操作系统发现连接请求完成了，它会把结果放进一个队列，这说明结果已经可用了，可以被 io_context 取出来了
-程序必须调用 io_context::run() 来保证结果被取出来，需要注意的是，这个操作是 block 的。
-当 io_context::run() 被调用的时候，它会取出结果，翻译 error_code 然后传给在 1 中定义的 handler
-示意图如下
-Proactor 模式 不需要线程的并发模型，在 asio 中的实现大概如图下
-其中各个组件的职责/定义如下
-Asynchronous Operation 定义异步操作，比如异步读写一个 socket</description></item><item><title>Ffsend</title><link>https://chux0519.github.io/posts/ffsend/</link><pubDate>Thu, 02 Apr 2020 14:56:02 +0800</pubDate><guid>https://chux0519.github.io/posts/ffsend/</guid><description>“阅后即焚” 服务 Firefox 为用户提供了一项服务叫做 send，可以配置下载次数、过期时间等，实现“阅后即焚”的效果。这个服务也是开源的，我在自己的站点上也部署了一下，这篇文章记录部署过程，以及遇到的一些问题。
-guide send 这个项目有自己的部署文档，见参考链接，与文档不同的是，我这里没有用 Apache 做服务器，我的机器已经使用了 nginx，那么其实直接使用 nginx 做反向代理即可。
-流程 在 DNS 解析上那里配置一条 A 记录 * 指向到服务器 IP。之后便可以支持二级域名了。 nginx 做配置，在 /etc/nginx/nginx.conf 里面可以看到，http 块下面引入了 sites-enabled 在 sites-enabled 下面添加反向代理的配置 创建文件 sites-enabled/ffsend 内容如下
-server { listen 80; server_name send.hexyoungs.club; location / { proxy_pass http://127.0.0.1:1443; proxy_redirect off; proxy_set_header Host $host; proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; proxy_http_version 1.1; proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection &amp;quot;Upgrade&amp;quot;; } } 下面几行的 Upgrade 的 header 是为了支持 websocket，之前没有添加时，websocker 链接是无法建立的，因此 send 服务是不会上传文件的。</description></item><item><title>新的个人站</title><link>https://chux0519.github.io/posts/new-page/</link><pubDate>Thu, 02 Apr 2020 14:43:09 +0800</pubDate><guid>https://chux0519.github.io/posts/new-page/</guid><description>新的个人站 最近看到司徒正美去世的消息，有点惋惜又有点惆怅。惋惜的是天妒英才，惆怅的是好歹大佬离开时留下了一些好的书、一些好的框架，让人们都记得他，而这世上大多数人离开时，可能不会留有一点痕迹。同时又让人警醒，工作和生活，事业和身体，都要注意好平衡。
-隔了很久，翻出了很久之前的准备用来记录博客的 repo，直到租的机器过期了，博客还是没有几篇。随着时间推移，自己越来越不愿意折腾，趁着一时兴起，今天就把博客（日记）折腾一下，搭起来，用一下，希望做到”留下点什么“。
-解决方案 博客的生成方案，我还是采用静态网站生成器，这里使用到的是 hugo。网站的部署方案分为两条线，一是使用 github pages 来做静态网站，二是用自己的一台服务器做镜像。
-github pages 不了解的朋友可以看下面的参考链接，简单的说就是 github 为用户提供了便利，使用 $username.github.io 为名字的 repo，会自动使用 repo 内容的 master 分支作为 root，如果内容合法就可以在 $username.github.io 这个链接上访问得到内容。
-这一次和往常不同的是，我的源代码和 hugo 最后打包出来的静态网站内容都是放在这个 repo 下的，通过 github 的 action，监听 release 分支的提交，然后触发编译，最后部署到 master 分支。整个过程显得很流畅，体验很好。后面有机会我会单独再深入讲一下如何配置 action 做到这 commit 后自动 build 和部署。
-同步 我自己其实最近在某提供商租了一台机器，于是想要做同步。其实做法很简单，利用 nginx 起一个静态站点，然后设置一个 crontab 任务，定时地同步上面提到的 $username.github.io repo，rsync 内容到 nginx 的网站目录下即可。
-参考链接 Working with GitHub Pages github actions peaceiris/actions-hugo workflow 内容示例 hugo</description></item><item><title>Leetcode Rust Easy</title><link>https://chux0519.github.io/posts/leetcode-rust-easy/</link><pubDate>Tue, 17 Dec 2019 10:37:14 +0800</pubDate><guid>https://chux0519.github.io/posts/leetcode-rust-easy/</guid><description>算法系列 简单题
-这里记录刷简单题过程中感到有意思的题目
-Maximum subarray problem 这类型的题目描述在：wiki
-算法还有一个名称，叫做 Kadane's algorithm。在刷到 leetcode 的 121 和 122 题目时，卡住了，不像其他类型的题目，看完题目后就会有比较清晰的想法，直接实现即可。这里学习的思想主要是累加，即给出一个数组，要算法求出获利最大，即 A[n] - A[m] 最大(n &amp;gt; m)
-核心是等式
-A[n] - A[m] = A[n] - A[n-1] + A[n-1] - A[n-2] + .. + A[m+1] - A[m]
-异或操作 异或操作符实际上也很有意思，某些题目可能会在题目提示，时间复杂度和空闲复杂度，和能够直接想到的解法通常相差较大。
-比如 #136-single-number
-核心就是异或操作的特殊性，一个数在对自己异或的时候，实际会清零，这在汇编里面常用来清空寄存器。
-链表找环 141 题，找链表是否存在环，使用快慢指针即可
-链表找交叉点 160题，找链表交叉点。 需要解决的问题是，两个链表的长度不一定相同，要想办法使它们能够进行比较。
-这里的解法参考： 讨论区</description></item><item><title>Raspi3 Os 02</title><link>https://chux0519.github.io/posts/raspi3-os-02/</link><pubDate>Sun, 24 Nov 2019 15:52:14 +0800</pubDate><guid>https://chux0519.github.io/posts/raspi3-os-02/</guid><description>这是基于树莓派学习操作系统的第二部分，之前打通了工具链，能够使用 clang 进行交叉编译，使用 qemu 进行运行。
-这一篇文章，期望完成
-C 语言的控制 Rust 的控制 使用 C 语言控制主要为了了解整个流程下面的细节，再换到抽象层次更高的 Rust，打通流程，了解原理后，会一直使用 Rust 进行开发了。
-C 语言介入 我们编写普通 C 程序时，其实 C 是有 runtime 的(crt)，它帮我们做了许多事情，准备好 .bss 段就是其中一件。
-在 bare metal 的世界里面，我们需要手动完成这件事。我们可以通过 linker script，定义好 bss 的内存布局，在 bss 的开始、结束处定义两个标记，然后通过代码进行初始化。
-Rust 工具链 安装 nightly 版本的工 rust 编译器 curl https://sh.rustup.rs -sSf \ | \ sh -s -- \ --default-toolchain nightly \ --component rust-src llvm-tools-preview clippy rustfmt rls rust-analysis cargo install cargo-xbuild cargo-binutils 这里使用 nightly，是因为我们用到的一些语法、工具链等特性都还在 nightly 下，包括以下（不完全）</description></item><item><title>Raspi3 Os 01</title><link>https://chux0519.github.io/posts/raspi3-os-01/</link><pubDate>Sat, 16 Nov 2019 16:24:14 +0800</pubDate><guid>https://chux0519.github.io/posts/raspi3-os-01/</guid><description>基于树莓派 3 的操作系统学习，第一部分。
-工具链 qemu 这是个模拟器，我们开发时，可以先用 qemu 模拟树莓派，不用每次真的用真机测试。 这里进行手动编译。
-./configure --target-list=aarch64-softmmu --enable-modules \ --enable-tcg-interpreter --enable-debug-tcg \ --python=/usr/bin/python2.7; \ clang &amp;amp; llvm clang 被设计时，定位就是 cross-compiler
-安装 llvm 主要是要使用到 llvm-objcopy
-另外还需要 lld
-编译：
-编译 asm clang &amp;ndash;target=aarch64-elf -Wall -O2 -ffreestanding -nostdinc -nostdlib -mcpu=cortex-a53+nosimd -c start.S -o start.o
-参数说明：
---target=aarch64-elf，指编译的目标平台是 64 位的 arm 架构，elf 是一种可执行文件格式 -Wall，指打开诊断信息 -O2，指优化程度, O2 是中等程度的优化，可实现大多数优化 -ffreestanding，指代编译结果独立运行(bare metal)，没有 host -nostdinc 和 -nostdlib manual 没有讲清楚，个人理解是不包含标准库必须要包含的 flag -mcpu=cortex-a53+nosimd，树莓派 3b 的芯片是 BCM2837，属于 cortex-a53 的架构，nosimd 指不需要支持 simd。这里个人对 cortex-a53 和 BCM2837 的区别可能存在误解，个人理解是，BCM2837 是具体的一块芯片，而 cortex-a53 指代的是一种 arm 的架构或者说标准，如果我的理解有误，请通过邮件纠正我。 -c 指代生成 .</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>story on hexyoungs blog</title><link>/tags/story/</link><description>hexyoungs blog (story)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 24 Apr 2020 11:41:54 +0800</lastBuildDate><atom:link href="/tags/story/index.xml" rel="self" type="application/rss+xml"/><item><title>Boost Asio 笔记</title><link>/posts/boost-asio/</link><pubDate>Fri, 24 Apr 2020 11:41:54 +0800</pubDate><guid>/posts/boost-asio/</guid><description>&lt;p>使用 boost asio 可以跨平台处理异步操作，这里对如何使用（异步）进行简单摘要&lt;/p>
+&lt;h2 id="异步操作">异步操作&lt;/h2>
+&lt;ol>
+&lt;li>程序需要初始化一个 &amp;ldquo;io object&amp;rdquo;(socket)，将 socket 和其完成后的 handler 进行关联&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>socket.async_connect(server_endpoint, your_completion_handler);&lt;/p>
+&lt;/blockquote>
+&lt;p>其中，&lt;code>your_completion_handler&lt;/code> 函数签名是&lt;/p>
+&lt;blockquote>
+&lt;p>void your_completion_handler(const boost::system::error_code&amp;amp; ec);&lt;/p>
+&lt;/blockquote>
+&lt;ol start="2">
+&lt;li>
+&lt;p>&amp;ldquo;io object&amp;rdquo; 将请求转交给 &lt;code>io_context&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>io_context&lt;/code> 给操作系统发信号，说明现在开始发起一个异步的连接了&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>过了一段时间之后，操作系统发现连接请求完成了，它会把结果放进一个队列，这说明结果已经可用了，可以被 &lt;code>io_context&lt;/code> 取出来了&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>程序必须调用 &lt;code>io_context::run()&lt;/code> 来保证结果被取出来，需要注意的是，这个操作是 block 的。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>当 &lt;code>io_context::run()&lt;/code> 被调用的时候，它会取出结果，翻译 &lt;code>error_code&lt;/code> 然后传给在 1 中定义的 handler&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>示意图如下&lt;/p>
+&lt;p>&lt;img src="./async_op1.png" alt="async_op1.png">
+&lt;img src="./async_op2.png" alt="async_op2.png">&lt;/p>
+&lt;h2 id="proactor-模式">Proactor 模式&lt;/h2>
+&lt;p>不需要线程的并发模型，在 asio 中的实现大概如图下&lt;/p>
+&lt;p>&lt;img src="./proactor.png" alt="proactor">&lt;/p>
+&lt;p>其中各个组件的职责/定义如下&lt;/p>
+&lt;h3 id="asynchronous-operation">Asynchronous Operation&lt;/h3>
+&lt;p>定义异步操作，比如异步读写一个 socket&lt;/p>
+&lt;h3 id="asynchronous-operation-processor">Asynchronous Operation Processor&lt;/h3>
+&lt;p>执行异步操作的地方，同时负责将操作完成事件放进 &lt;code>Completion Event Queue&lt;/code>，一个例子就是 &lt;code>reactive_socket_service&lt;/code>&lt;/p>
+&lt;h3 id="completion-event-queue">Completion Event Queue&lt;/h3>
+&lt;p>是一个缓存队列，用户存储操作完成的事件，一直到 &lt;code>Asynchronous Event Demultiplexer&lt;/code> 把它取出&lt;/p>
+&lt;h3 id="completion-handler">Completion Handler&lt;/h3>
+&lt;p>处理异步操作的结果，是 function 对象，通常使用 &lt;code>boost::bind&lt;/code> 创建&lt;/p>
+&lt;h3 id="asynchronous-event-demultiplexer">Asynchronous Event Demultiplexer&lt;/h3>
+&lt;p>(阻塞地)等待 &lt;code>Completion Event Queue&lt;/code> 中的事件发生，然后将完成事件传给调用者&lt;/p>
+&lt;h3 id="proactor">Proactor&lt;/h3>
+&lt;p>调用 &lt;code>Asynchronous Event Demultiplexer&lt;/code> 去取完成事件，然后分发给 &lt;code>Completion Handler&lt;/code>，通常 &lt;code>io_context&lt;/code> 充当这个角色&lt;/p>
+&lt;h3 id="initiator">Initiator&lt;/h3>
+&lt;p>发起异步操作的业务代码，通常通过高层的接口进行调用，比如通过 &lt;code>basic_stream_socket&lt;/code>，实际上底层是将其操作代理给了 &lt;code>reactive_socket_service&lt;/code>&lt;/p>
+&lt;h2 id="缺点">缺点&lt;/h2>
+&lt;p>优点不详述了（可移植性，解耦线程和并发等等），这里主要贴两个缺点&lt;/p>
+&lt;ol>
+&lt;li>很多组件让程序变得更复杂&lt;/li>
+&lt;li>内存的占用（queue 的出现使得内存占用变高，主要相对于 reactor 模式，reactor 模式在 socket 可读或可写时，都不会有额外的 buffer 的内存开销）&lt;/li>
+&lt;/ol>
+&lt;h2 id="链接">链接&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://www.boost.org/doc/libs/1_66_0/doc/html/boost_asio/overview/core/basics.html">boost_asio/overview/core/basics.html&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.boost.org/doc/libs/1_66_0/doc/html/boost_asio/overview/core/async.html">boost_asio/overview/core/async.html&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Ffsend</title><link>/posts/ffsend/</link><pubDate>Thu, 02 Apr 2020 14:56:02 +0800</pubDate><guid>/posts/ffsend/</guid><description>&lt;h1 id="阅后即焚-服务">“阅后即焚” 服务&lt;/h1>
+&lt;p>Firefox 为用户提供了一项服务叫做 &lt;code>send&lt;/code>，可以配置下载次数、过期时间等，实现“阅后即焚”的效果。这个服务也是开源的，我在自己的站点上也部署了一下，这篇文章记录部署过程，以及遇到的一些问题。&lt;/p>
+&lt;h2 id="guide">guide&lt;/h2>
+&lt;p>&lt;code>send&lt;/code> 这个项目有自己的部署文档，见参考链接，与文档不同的是，我这里没有用 Apache 做服务器，我的机器已经使用了 nginx，那么其实直接使用 nginx 做反向代理即可。&lt;/p>
+&lt;h3 id="流程">流程&lt;/h3>
+&lt;ol>
+&lt;li>在 DNS 解析上那里配置一条 A 记录 &lt;code>*&lt;/code> 指向到服务器 IP。之后便可以支持二级域名了。&lt;/li>
+&lt;li>nginx 做配置，在 &lt;code>/etc/nginx/nginx.conf&lt;/code> 里面可以看到，&lt;code>http&lt;/code> 块下面引入了 &lt;code>sites-enabled&lt;/code>&lt;/li>
+&lt;li>在 &lt;code>sites-enabled&lt;/code> 下面添加反向代理的配置&lt;/li>
+&lt;/ol>
+&lt;p>创建文件 &lt;code>sites-enabled/ffsend&lt;/code> 内容如下&lt;/p>
+&lt;pre>&lt;code>server {
+listen 80;
+server_name send.hexyoungs.club;
+location / {
+proxy_pass http://127.0.0.1:1443;
+proxy_redirect off;
+proxy_set_header Host $host;
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_http_version 1.1;
+proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection &amp;quot;Upgrade&amp;quot;;
+}
+}
+&lt;/code>&lt;/pre>&lt;p>下面几行的 &lt;code>Upgrade&lt;/code> 的 header 是为了支持 websocket，之前没有添加时，websocker 链接是无法建立的，因此 send 服务是不会上传文件的。&lt;/p>
+&lt;p>完成上述步骤后，检查一下 nginx 的配置是不是有效&lt;/p>
+&lt;blockquote>
+&lt;p>sudo nginx -t -c /etc/nginx/nginx.conf&lt;/p>
+&lt;/blockquote>
+&lt;p>在这里的时候，由于我的域名太长了，这里爆了个错，需要添加一行&lt;/p>
+&lt;blockquote>
+&lt;p>server_names_hash_bucket_size 64;&lt;/p>
+&lt;/blockquote>
+&lt;p>在默认配置的 http 模块下面。&lt;/p>
+&lt;p>最后，利用 certbot 添加 https 支持就好，certbot 会检测并修改上面的配置。&lt;/p>
+&lt;blockquote>
+&lt;p>sudo certbot &amp;ndash;nginx&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="尝试">尝试&lt;/h2>
+&lt;p>访问 &lt;a href="https://send.hexyoungs.club/">https://send.hexyoungs.club/&lt;/a> 试试吧&lt;/p>
+&lt;h2 id="参考链接">参考链接&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/mozilla/send">send&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/mozilla/send/blob/master/docs/deployment.md">send 部署文档&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://stackoverflow.com/questions/13895933/nginx-emerg-could-not-build-the-server-names-hash-you-should-increase-server">&amp;ldquo;could not build the server_names_hash, you should increase server_names_hash_bucket_size&amp;rdquo;&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx">certbot&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>新的个人站</title><link>/posts/new-page/</link><pubDate>Thu, 02 Apr 2020 14:43:09 +0800</pubDate><guid>/posts/new-page/</guid><description>&lt;p>最近看到司徒正美去世的消息，有点惋惜又有点惆怅。惋惜的是天妒英才，惆怅的是好歹大佬离开时留下了一些好的书、一些好的框架，让人们都记得他，而这世上大多数人离开时，可能不会留有一点痕迹。同时又让人警醒，工作和生活，事业和身体，都要注意好平衡。&lt;/p>
+&lt;p>隔了很久，翻出了很久之前的准备用来记录博客的 repo，直到租的机器过期了，博客还是没有几篇。随着时间推移，自己越来越不愿意折腾，趁着一时兴起，今天就把博客（日记）折腾一下，搭起来，用一下，希望做到”留下点什么“。&lt;/p>
+&lt;h2 id="解决方案">解决方案&lt;/h2>
+&lt;p>博客的生成方案，我还是采用静态网站生成器，这里使用到的是 &lt;code>hugo&lt;/code>。网站的部署方案分为两条线，一是使用 github pages 来做静态网站，二是用自己的一台服务器做镜像。&lt;/p>
+&lt;h3 id="github-pages">github pages&lt;/h3>
+&lt;p>不了解的朋友可以看下面的参考链接，简单的说就是 github 为用户提供了便利，使用 &lt;code>$username.github.io&lt;/code> 为名字的 repo，会自动使用 repo 内容的 master 分支作为 root，如果内容合法就可以在 &lt;code>$username.github.io&lt;/code> 这个链接上访问得到内容。&lt;/p>
+&lt;p>这一次和往常不同的是，我的源代码和 hugo 最后打包出来的静态网站内容都是放在这个 repo 下的，通过 github 的 &lt;code>action&lt;/code>，监听 &lt;code>release&lt;/code> 分支的提交，然后触发编译，最后部署到 master 分支。整个过程显得很流畅，体验很好。后面有机会我会单独再深入讲一下如何配置 action 做到这 commit 后自动 build 和部署。&lt;/p>
+&lt;h3 id="同步">同步&lt;/h3>
+&lt;p>我自己其实最近在某提供商租了一台机器，于是想要做同步。其实做法很简单，利用 nginx 起一个静态站点，然后设置一个 crontab 任务，定时地同步上面提到的 &lt;code>$username.github.io&lt;/code> repo，rsync 内容到 nginx 的网站目录下即可。&lt;/p>
+&lt;h2 id="参考链接">参考链接&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://help.github.com/en/github/working-with-github-pages">Working with GitHub Pages&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/features/actions">github actions&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/peaceiris/actions-hugo">peaceiris/actions-hugo&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/chux0519/chux0519.github.io/blob/e7e2cf708306ee26a9b398d25a69693a6c4c5086/.github/workflows/gh-pages.yml#L1">workflow 内容示例&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://gohugo.io/">hugo&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Leetcode Rust Easy</title><link>/posts/leetcode-rust-easy/</link><pubDate>Tue, 17 Dec 2019 10:37:14 +0800</pubDate><guid>/posts/leetcode-rust-easy/</guid><description>&lt;h2 id="算法系列">算法系列&lt;/h2>
+&lt;p>简单题&lt;/p>
+&lt;p>这里记录刷简单题过程中感到有意思的题目&lt;/p>
+&lt;h2 id="maximum-subarray-problem">Maximum subarray problem&lt;/h2>
+&lt;p>这类型的题目描述在：&lt;a href="https://en.wikipedia.org/wiki/Maximum_subarray_problem#Kadane's_algorithm">wiki&lt;/a>&lt;/p>
+&lt;p>算法还有一个名称，叫做 Kadane's algorithm。在刷到 leetcode 的 &lt;a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/">121&lt;/a> 和 &lt;a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/">122&lt;/a> 题目时，卡住了，不像其他类型的题目，看完题目后就会有比较清晰的想法，直接实现即可。这里学习的思想主要是累加，即给出一个数组，要算法求出获利最大，即 A[n] - A[m] 最大(n &amp;gt; m)&lt;/p>
+&lt;p>核心是等式&lt;/p>
+&lt;blockquote>
+&lt;p>A[n] - A[m] = A[n] - A[n-1] + A[n-1] - A[n-2] + .. + A[m+1] - A[m]&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="异或操作">异或操作&lt;/h2>
+&lt;p>异或操作符实际上也很有意思，某些题目可能会在题目提示，时间复杂度和空闲复杂度，和能够直接想到的解法通常相差较大。&lt;/p>
+&lt;p>比如 &lt;a href="https://leetcode.com/problems/single-number/">#136-single-number&lt;/a>&lt;/p>
+&lt;p>核心就是异或操作的特殊性，一个数在对自己异或的时候，实际会清零，这在汇编里面常用来清空寄存器。&lt;/p>
+&lt;h2 id="链表找环">链表找环&lt;/h2>
+&lt;p>&lt;a href="https://leetcode.com/problems/linked-list-cycle/">141&lt;/a> 题，找链表是否存在环，使用快慢指针即可&lt;/p>
+&lt;h2 id="链表找交叉点">链表找交叉点&lt;/h2>
+&lt;p>&lt;a href="https://leetcode.com/problems/intersection-of-two-linked-lists/">160&lt;/a>题，找链表交叉点。
+需要解决的问题是，两个链表的长度不一定相同，要想办法使它们能够进行比较。&lt;/p>
+&lt;p>这里的解法参考：
+&lt;a href="https://leetcode.com/problems/intersection-of-two-linked-lists/discuss/49785/Java-solution-without-knowing-the-difference-in-len!/165648">讨论区&lt;/a>&lt;/p></description></item><item><title>Raspi3 Os 02</title><link>/posts/raspi3-os-02/</link><pubDate>Sun, 24 Nov 2019 15:52:14 +0800</pubDate><guid>/posts/raspi3-os-02/</guid><description>&lt;p>这是基于树莓派学习操作系统的第二部分，之前打通了工具链，能够使用 clang 进行交叉编译，使用 qemu 进行运行。&lt;/p>
+&lt;p>这一篇文章，期望完成&lt;/p>
+&lt;ol>
+&lt;li>C 语言的控制&lt;/li>
+&lt;li>Rust 的控制&lt;/li>
+&lt;/ol>
+&lt;p>使用 C 语言控制主要为了了解整个流程下面的细节，再换到抽象层次更高的 Rust，打通流程，了解原理后，会一直使用 Rust 进行开发了。&lt;/p>
+&lt;h2 id="c-语言介入">C 语言介入&lt;/h2>
+&lt;p>我们编写普通 C 程序时，其实 C 是有 runtime 的(&lt;a href="https://en.wikipedia.org/wiki/Crt0">crt&lt;/a>)，它帮我们做了许多事情，准备好 &lt;code>.bss&lt;/code> 段就是其中一件。&lt;/p>
+&lt;p>在 bare metal 的世界里面，我们需要手动完成这件事。我们可以通过 linker script，定义好 bss 的内存布局，在 bss 的开始、结束处定义两个标记，然后通过代码进行初始化。&lt;/p>
+&lt;h2 id="rust">Rust&lt;/h2>
+&lt;h3 id="工具链">工具链&lt;/h3>
+&lt;ul>
+&lt;li>安装 nightly 版本的工 rust 编译器&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">curl https://sh.rustup.rs -sSf &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;span style="color:#ae81ff">&lt;/span> | &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;span style="color:#ae81ff">&lt;/span> sh -s -- &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;span style="color:#ae81ff">&lt;/span> --default-toolchain nightly &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;span style="color:#ae81ff">&lt;/span> --component rust-src llvm-tools-preview clippy rustfmt rls rust-analysis
+cargo install cargo-xbuild cargo-binutils
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里使用 nightly，是因为我们用到的一些语法、工具链等特性都还在 nightly 下，包括以下（不完全）&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>aarch64-unknown-none-softfloat&lt;/code> target&lt;/li>
+&lt;li>&lt;code>asm!&lt;/code>，见 &lt;a href="https://github.com/rust-lang/rust/issues/29722">issue#29722&lt;/a>&lt;/li>
+&lt;li>&lt;code>global_asm!&lt;/code>， 见 &lt;a href="https://github.com/rust-lang/rust/issues/35119">issue#35119&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>我们继续使用汇编进行 bss 段的初始化，但有一个 crate 叫做 &lt;code>r0&lt;/code>，我也可以借助这个 crate 进行 bss 的初始化。&lt;/p>
+&lt;h2 id="初始化-bss-汇编">初始化 bss 汇编&lt;/h2>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-asm" data-lang="asm"> &lt;span style="color:#960050;background-color:#1e0010">/&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">/&lt;/span> &lt;span style="color:#a6e22e">clear&lt;/span> &lt;span style="color:#66d9ef">bss&lt;/span>
+&lt;span style="color:#a6e22e">ldr&lt;/span> &lt;span style="color:#66d9ef">x1&lt;/span>, &lt;span style="color:#960050;background-color:#1e0010">=&lt;/span>&lt;span style="color:#66d9ef">__bss_start&lt;/span>
+&lt;span style="color:#a6e22e">ldr&lt;/span> &lt;span style="color:#66d9ef">w2&lt;/span>, &lt;span style="color:#960050;background-color:#1e0010">=&lt;/span>&lt;span style="color:#66d9ef">__bss_size&lt;/span>
+&lt;span style="color:#960050;background-color:#1e0010">3&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> &lt;span style="color:#a6e22e">cbz&lt;/span> &lt;span style="color:#66d9ef">w2&lt;/span>, &lt;span style="color:#ae81ff">4&lt;/span>&lt;span style="color:#66d9ef">f&lt;/span>
+&lt;span style="color:#a6e22e">str&lt;/span> &lt;span style="color:#66d9ef">xzr&lt;/span>, [&lt;span style="color:#66d9ef">x1&lt;/span>], &lt;span style="color:#75715e">#8
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">sub&lt;/span> &lt;span style="color:#66d9ef">w2&lt;/span>, &lt;span style="color:#66d9ef">w2&lt;/span>, &lt;span style="color:#75715e">#1
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">cbnz&lt;/span> &lt;span style="color:#66d9ef">w2&lt;/span>, &lt;span style="color:#ae81ff">3&lt;/span>&lt;span style="color:#66d9ef">b&lt;/span>
+&lt;span style="color:#960050;background-color:#1e0010">4&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> &lt;span style="color:#a6e22e">bl&lt;/span> &lt;span style="color:#66d9ef">main&lt;/span>
+&lt;span style="color:#960050;background-color:#1e0010">/&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">/&lt;/span> &lt;span style="color:#a6e22e">for&lt;/span> &lt;span style="color:#66d9ef">failsafe&lt;/span>, &lt;span style="color:#66d9ef">halt&lt;/span> &lt;span style="color:#66d9ef">this&lt;/span> &lt;span style="color:#66d9ef">core&lt;/span> &lt;span style="color:#66d9ef">too&lt;/span>
+&lt;span style="color:#a6e22e">b&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#66d9ef">b&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>注意，&lt;code>__bss_start&lt;/code> 和 &lt;code>__bss_size&lt;/code> 都是在 link.ld 中定义的，这里可以直接使用。&lt;/p>
+&lt;h3 id="asm-笔记">asm 笔记&lt;/h3>
+&lt;h4 id="cbzhttpwwwkeilcomsupportmandocsarmasmarmasm_dom1361289867296htm-compare-and-branch-on-zero">&lt;a href="http://www.keil.com/support/man/docs/armasm/armasm_dom1361289867296.htm">cbz&lt;/a>: Compare and Branch on Zero&lt;/h4>
+&lt;p>用法类似：&lt;code>CBZ Rn, label&lt;/code>，即表示，w2 等于零时，终止循环跳到 label 是 4 的位置。&lt;/p>
+&lt;p>label 后面带有的后缀含义如下：&lt;/p>
+&lt;ul>
+&lt;li>f: foward，即向下搜索&lt;/li>
+&lt;li>b: backward，即向前搜索&lt;/li>
+&lt;/ul>
+&lt;p>另外还有 a, t，详见： &lt;a href="http://www.keil.com/support/man/docs/armasm/armasm_dom1359731175956.htm">Syntax of numeric local labels&lt;/a>&lt;/p>
+&lt;h4 id="strhttpwwwkeilcomsupportmandocsarmasmarmasm_dom1361289906890htm">&lt;a href="http://www.keil.com/support/man/docs/armasm/armasm_dom1361289906890.htm">str&lt;/a>&lt;/h4>
+&lt;p>这里的用法属于 post-indexed，即将 xzr 寄存器中的值存到 x1 为基址，8 为偏移的位置，完成后，x1 的值再加 8&lt;/p>
+&lt;p>xzr 寄存器是 0，即相当于逐字节进行填充。&lt;/p>
+&lt;p>另外两个指令比较容易看懂，这里不再赘述。&lt;/p>
+&lt;p>在 bss 初始化后，实际上通过 &lt;code>bl main&lt;/code>，跳到了 main 函数中了。&lt;/p>
+&lt;h2 id="main">main&lt;/h2>
+&lt;p>我们需要在 C/Rust 中暴露出这个符号就可以了，即定义 main 函数即可，需要注意的是，Rust 中，需要使用 &lt;code>#[no_mangle]&lt;/code> 注解，防止函数名被改变。&lt;/p>
+&lt;h2 id="rust-后记panic-handler">Rust 后记：panic handler&lt;/h2>
+&lt;p>我们想要使用 Rust 编写没有 runtime 的程序，那么我们需要自己实现 panic handler，这里我们使用 &lt;code>asm!&lt;/code>，用汇编实现无限循环，使得 panic 时，挂起 CPU。&lt;/p>
+&lt;h2 id="源码">源码&lt;/h2>
+&lt;ul>
+&lt;li>C 语言版本：&lt;a href="https://github.com/chux0519/raspi-os/tree/step1">step1&lt;/a> 分支&lt;/li>
+&lt;li>Rust 版本： &lt;a href="https://github.com/chux0519/raspi-os/tree/step1-rust">step1-rs&lt;/a> 分支&lt;/li>
+&lt;/ul></description></item><item><title>Raspi3 Os 01</title><link>/posts/raspi3-os-01/</link><pubDate>Sat, 16 Nov 2019 16:24:14 +0800</pubDate><guid>/posts/raspi3-os-01/</guid><description>&lt;p>基于树莓派 3 的操作系统学习，第一部分。&lt;/p>
+&lt;h2 id="工具链">工具链&lt;/h2>
+&lt;h3 id="qemu">qemu&lt;/h3>
+&lt;p>这是个模拟器，我们开发时，可以先用 qemu 模拟树莓派，不用每次真的用真机测试。
+这里进行手动编译。&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">./configure --target-list&lt;span style="color:#f92672">=&lt;/span>aarch64-softmmu --enable-modules &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;span style="color:#ae81ff">&lt;/span> --enable-tcg-interpreter --enable-debug-tcg &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;span style="color:#ae81ff">&lt;/span> --python&lt;span style="color:#f92672">=&lt;/span>/usr/bin/python2.7; &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="clang--llvm">clang &amp;amp; llvm&lt;/h3>
+&lt;p>clang 被设计时，定位就是 cross-compiler&lt;/p>
+&lt;p>安装 llvm 主要是要使用到 llvm-objcopy&lt;/p>
+&lt;p>另外还需要 lld&lt;/p>
+&lt;p>编译：&lt;/p>
+&lt;ol>
+&lt;li>编译 asm&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>clang &amp;ndash;target=aarch64-elf -Wall -O2 -ffreestanding -nostdinc -nostdlib -mcpu=cortex-a53+nosimd -c start.S -o start.o&lt;/p>
+&lt;/blockquote>
+&lt;p>参数说明：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>--target=aarch64-elf&lt;/code>，指编译的目标平台是 64 位的 arm 架构，elf 是一种可执行文件格式&lt;/li>
+&lt;li>&lt;code>-Wall&lt;/code>，指打开诊断信息&lt;/li>
+&lt;li>&lt;code>-O2&lt;/code>，指优化程度, O2 是中等程度的优化，可实现大多数优化&lt;/li>
+&lt;li>&lt;code>-ffreestanding&lt;/code>，指代编译结果独立运行(bare metal)，没有 host&lt;/li>
+&lt;li>&lt;code>-nostdinc&lt;/code> 和 &lt;code>-nostdlib&lt;/code> manual 没有讲清楚，个人理解是不包含标准库必须要包含的 flag&lt;/li>
+&lt;li>&lt;code>-mcpu=cortex-a53+nosimd&lt;/code>，树莓派 3b 的芯片是 BCM2837，属于 cortex-a53 的架构，nosimd 指不需要支持 simd。这里个人对 cortex-a53 和 BCM2837 的区别可能存在误解，个人理解是，BCM2837 是具体的一块芯片，而 cortex-a53 指代的是一种 arm 的架构或者说标准，如果我的理解有误，请通过邮件纠正我。&lt;/li>
+&lt;li>&lt;code>-c&lt;/code> 指代生成 &lt;code>.o&lt;/code> 文件，包含了 assembler 的处理，这里输入是一个 asm，因此需要 -c，主要区别于 &lt;code>-S&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;ol start="2">
+&lt;li>链接到 elf 格式&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>ld.lld -m aarch64elf -nostdlib start.o -o kernel8.elf&lt;/p>
+&lt;/blockquote>
+&lt;p>object 文件是不能运行的，它里面包含了一些符号信息，需要 linker 把它链接成对应平台的 efl 文件才能狗被执行。&lt;/p>
+&lt;p>通过 llvm-objdump 可以查看反汇编信息&lt;/p>
+&lt;blockquote>
+&lt;p>llvm-objdump -d start.o&lt;/p>
+&lt;/blockquote>
+&lt;ol start="3">
+&lt;li>变成二进制镜像&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>llvm-objcopy &amp;ndash;input-target=aarch64-elf -O binary kernel8.elf kernel8.img&lt;/p>
+&lt;/blockquote>
+&lt;ol start="4">
+&lt;li>使用 qemu 运行查看效果&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>qemu-system-aarch64 -M raspi3 -kernel kernel8.img -d in_asm&lt;/p>
+&lt;/blockquote>
+&lt;p>至此，我们可以将 start.S 编译、链接成 qemu 可以调试的镜像了。&lt;/p>
+&lt;p>github repo: 在分支 &lt;a href="https://github.com/chux0519/raspi-os/tree/step0">step0&lt;/a> 查看&lt;/p></description></item></channel></rss>

@@ -1,6 +1,42 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>leetcode on chux0519</title><link>https://chux0519.github.io/tags/leetcode/</link><description>Recent content in leetcode on chux0519</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 22 Oct 2019 22:40:20 +0800</lastBuildDate><atom:link href="https://chux0519.github.io/tags/leetcode/index.xml" rel="self" type="application/rss+xml"/><item><title>Leetcode Rust Bfs</title><link>https://chux0519.github.io/posts/leetcode-rust-bfs/</link><pubDate>Tue, 22 Oct 2019 22:40:20 +0800</pubDate><guid>https://chux0519.github.io/posts/leetcode-rust-bfs/</guid><description>算法系列 - BFS BFS 指广度优先搜索，是一种遍历树、图的方法。
-BFS 通常会和队列相关，但不完全等于队列。以下是我在 leetcode 刷题后的整理。
-层级相关 首先存在一类题目，通常会和树的层级遍历相关，这类型的题目是存在固定解题模式的。
-首先定义节点
-#[derive(Debug, PartialEq, Eq)] pub struct TreeNode { pub val: i32, pub left: Option&amp;lt;Rc&amp;lt;RefCell&amp;lt;TreeNode&amp;gt;&amp;gt;&amp;gt;, pub right: Option&amp;lt;Rc&amp;lt;RefCell&amp;lt;TreeNode&amp;gt;&amp;gt;&amp;gt;, } 然后模板通常为以下，或稍微有些变化，但主体框架都是一致的。
-// root: Option&amp;lt;Rc&amp;lt;RefCell&amp;lt;TreeNode&amp;gt;&amp;gt;&amp;gt; let mut q = VecDeque::new(); q.push_back(root); while !q.is_empty() { // 每一层 let mut level = Vec::new(); for _ in 0..q.len() { // 在遍历过程中，q 会被更新，进入下一层 let front = q.pop_front().unwrap(); if let Some(f) = front { let f = f.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>leetcode on hexyoungs blog</title><link>/tags/leetcode/</link><description>hexyoungs blog (leetcode)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 22 Oct 2019 22:40:20 +0800</lastBuildDate><atom:link href="/tags/leetcode/index.xml" rel="self" type="application/rss+xml"/><item><title>Leetcode Rust Bfs</title><link>/posts/leetcode-rust-bfs/</link><pubDate>Tue, 22 Oct 2019 22:40:20 +0800</pubDate><guid>/posts/leetcode-rust-bfs/</guid><description>&lt;h2 id="算法系列---bfs">算法系列 - BFS&lt;/h2>
+&lt;p>BFS 指广度优先搜索，是一种遍历树、图的方法。&lt;/p>
+&lt;p>BFS 通常会和队列相关，但不完全等于队列。以下是我在 leetcode 刷题后的整理。&lt;/p>
+&lt;h2 id="层级相关">层级相关&lt;/h2>
+&lt;p>首先存在一类题目，通常会和树的层级遍历相关，这类型的题目是存在固定解题模式的。&lt;/p>
+&lt;p>首先定义节点&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-rust" data-lang="rust">&lt;span style="color:#75715e">#[&lt;/span>&lt;span style="color:#75715e">derive(Debug, PartialEq, Eq)&lt;/span>&lt;span style="color:#75715e">]&lt;/span>
+&lt;span style="color:#66d9ef">pub&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> &lt;span style="color:#a6e22e">TreeNode&lt;/span> {
+&lt;span style="color:#66d9ef">pub&lt;/span> val: &lt;span style="color:#66d9ef">i32&lt;/span>,
+&lt;span style="color:#66d9ef">pub&lt;/span> left: Option&lt;span style="color:#f92672">&amp;lt;&lt;/span>Rc&lt;span style="color:#f92672">&amp;lt;&lt;/span>RefCell&lt;span style="color:#f92672">&amp;lt;&lt;/span>TreeNode&lt;span style="color:#f92672">&amp;gt;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>,
+&lt;span style="color:#66d9ef">pub&lt;/span> right: Option&lt;span style="color:#f92672">&amp;lt;&lt;/span>Rc&lt;span style="color:#f92672">&amp;lt;&lt;/span>RefCell&lt;span style="color:#f92672">&amp;lt;&lt;/span>TreeNode&lt;span style="color:#f92672">&amp;gt;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>,
+}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后模板通常为以下，或稍微有些变化，但主体框架都是一致的。&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-rust" data-lang="rust">&lt;span style="color:#75715e">// root: Option&amp;lt;Rc&amp;lt;RefCell&amp;lt;TreeNode&amp;gt;&amp;gt;&amp;gt;
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#66d9ef">mut&lt;/span> q &lt;span style="color:#f92672">=&lt;/span> VecDeque::new();
+q.push_back(root);
+&lt;span style="color:#66d9ef">while&lt;/span> &lt;span style="color:#f92672">!&lt;/span>q.is_empty() {
+&lt;span style="color:#75715e">// 每一层
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#66d9ef">mut&lt;/span> level &lt;span style="color:#f92672">=&lt;/span> Vec::new();
+&lt;span style="color:#66d9ef">for&lt;/span> _ &lt;span style="color:#66d9ef">in&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>..q.len() {
+&lt;span style="color:#75715e">// 在遍历过程中，q 会被更新，进入下一层
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">let&lt;/span> front &lt;span style="color:#f92672">=&lt;/span> q.pop_front().unwrap();
+&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#66d9ef">let&lt;/span> Some(f) &lt;span style="color:#f92672">=&lt;/span> front {
+&lt;span style="color:#66d9ef">let&lt;/span> f &lt;span style="color:#f92672">=&lt;/span> f.borrow();
+level.push(f.val);
+&lt;span style="color:#66d9ef">if&lt;/span> f.left.is_some() {
+q.push_back(f.left.clone());
+}
+&lt;span style="color:#66d9ef">if&lt;/span> f.right.is_some() {
+q.push_back(f.right.clone());
+}
+}
+}
+&lt;span style="color:#75715e">// 可能会有其他逻辑
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>}
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>属于这类型的题目有： q102, q103, q107, q111&lt;/p>
+&lt;h2 id="和其他思想结合">和其他思想结合&lt;/h2>
+&lt;p>除了一眼能看拿出来的层级遍历结构，某些题会使用到其他的数据结构或是思想。比如利用 hashset 进行缓存，然后在层级中做某些事情。&lt;/p>
+&lt;p>这类型的题型有：126, 127&lt;/p>
+&lt;p>对于这类特征不太明显的题目，只需要记得，比如最短路径、最近距离之类的描述，可以想想是不是和一用 BFS 的框架来思考就行了。&lt;/p>
+&lt;p>另外值得一提的是 127 题和 126 题的思路稍微有点不同，对于 126 题，它的维度要更高一点，即，想的时候，把返回结果的每个元素当成 BFS 的对象，这样可以稍作改动，减轻思考深度负担。&lt;/p>
+&lt;p>126 卡了我很久，这个&lt;a href="https://leetcode.com/problems/word-ladder-ii/discuss/40434/C%2B%2B-solution-using-standard-BFS-method-no-DFS-or-backtracking">链接&lt;/a>可以看到比较容易理解、纯粹的 BFS。&lt;/p></description></item></channel></rss>
