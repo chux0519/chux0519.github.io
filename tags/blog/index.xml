@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>blog on hexyoungs blog</title><link>/tags/blog/</link><description>hexyoungs blog (blog)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 24 Apr 2020 11:41:54 +0800</lastBuildDate><atom:link href="/tags/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Boost Asio 笔记</title><link>/posts/boost-asio/</link><pubDate>Fri, 24 Apr 2020 11:41:54 +0800</pubDate><guid>/posts/boost-asio/</guid><description>&lt;p>使用 boost asio 可以跨平台处理异步操作，这里对如何使用（异步）进行简单摘要&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>blog on hexyoungs blog</title><link>https://chux0519.github.io/tags/blog/</link><description>hexyoungs blog (blog)</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 24 Apr 2020 11:41:54 +0800</lastBuildDate><atom:link href="https://chux0519.github.io/tags/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Boost Asio 笔记</title><link>https://chux0519.github.io/posts/boost-asio/</link><pubDate>Fri, 24 Apr 2020 11:41:54 +0800</pubDate><guid>https://chux0519.github.io/posts/boost-asio/</guid><description>&lt;p>使用 boost asio 可以跨平台处理异步操作，这里对如何使用（异步）进行简单摘要&lt;/p>
 &lt;h2 id="异步操作">异步操作&lt;/h2>
 &lt;ol>
 &lt;li>程序需要初始化一个 &amp;ldquo;io object&amp;rdquo;(socket)，将 socket 和其完成后的 handler 进行关联&lt;/li>
@@ -58,7 +58,7 @@
 &lt;ul>
 &lt;li>&lt;a href="https://www.boost.org/doc/libs/1_66_0/doc/html/boost_asio/overview/core/basics.html">boost_asio/overview/core/basics.html&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.boost.org/doc/libs/1_66_0/doc/html/boost_asio/overview/core/async.html">boost_asio/overview/core/async.html&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Ffsend</title><link>/posts/ffsend/</link><pubDate>Thu, 02 Apr 2020 14:56:02 +0800</pubDate><guid>/posts/ffsend/</guid><description>&lt;h1 id="阅后即焚-服务">“阅后即焚” 服务&lt;/h1>
+&lt;/ul></description></item><item><title>Ffsend</title><link>https://chux0519.github.io/posts/ffsend/</link><pubDate>Thu, 02 Apr 2020 14:56:02 +0800</pubDate><guid>https://chux0519.github.io/posts/ffsend/</guid><description>&lt;h1 id="阅后即焚-服务">“阅后即焚” 服务&lt;/h1>
 &lt;p>Firefox 为用户提供了一项服务叫做 &lt;code>send&lt;/code>，可以配置下载次数、过期时间等，实现“阅后即焚”的效果。这个服务也是开源的，我在自己的站点上也部署了一下，这篇文章记录部署过程，以及遇到的一些问题。&lt;/p>
 &lt;h2 id="guide">guide&lt;/h2>
 &lt;p>&lt;code>send&lt;/code> 这个项目有自己的部署文档，见参考链接，与文档不同的是，我这里没有用 Apache 做服务器，我的机器已经使用了 nginx，那么其实直接使用 nginx 做反向代理即可。&lt;/p>
@@ -105,7 +105,7 @@ proxy_set_header Connection &amp;quot;Upgrade&amp;quot;;
 &lt;li>&lt;a href="https://github.com/mozilla/send/blob/master/docs/deployment.md">send 部署文档&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://stackoverflow.com/questions/13895933/nginx-emerg-could-not-build-the-server-names-hash-you-should-increase-server">&amp;ldquo;could not build the server_names_hash, you should increase server_names_hash_bucket_size&amp;rdquo;&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx">certbot&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>新的个人站</title><link>/posts/new-page/</link><pubDate>Thu, 02 Apr 2020 14:43:09 +0800</pubDate><guid>/posts/new-page/</guid><description>&lt;p>最近看到司徒正美去世的消息，有点惋惜又有点惆怅。惋惜的是天妒英才，惆怅的是好歹大佬离开时留下了一些好的书、一些好的框架，让人们都记得他，而这世上大多数人离开时，可能不会留有一点痕迹。同时又让人警醒，工作和生活，事业和身体，都要注意好平衡。&lt;/p>
+&lt;/ul></description></item><item><title>新的个人站</title><link>https://chux0519.github.io/posts/new-page/</link><pubDate>Thu, 02 Apr 2020 14:43:09 +0800</pubDate><guid>https://chux0519.github.io/posts/new-page/</guid><description>&lt;p>最近看到司徒正美去世的消息，有点惋惜又有点惆怅。惋惜的是天妒英才，惆怅的是好歹大佬离开时留下了一些好的书、一些好的框架，让人们都记得他，而这世上大多数人离开时，可能不会留有一点痕迹。同时又让人警醒，工作和生活，事业和身体，都要注意好平衡。&lt;/p>
 &lt;p>隔了很久，翻出了很久之前的准备用来记录博客的 repo，直到租的机器过期了，博客还是没有几篇。随着时间推移，自己越来越不愿意折腾，趁着一时兴起，今天就把博客（日记）折腾一下，搭起来，用一下，希望做到”留下点什么“。&lt;/p>
 &lt;h2 id="解决方案">解决方案&lt;/h2>
 &lt;p>博客的生成方案，我还是采用静态网站生成器，这里使用到的是 &lt;code>hugo&lt;/code>。网站的部署方案分为两条线，一是使用 github pages 来做静态网站，二是用自己的一台服务器做镜像。&lt;/p>
@@ -121,7 +121,7 @@ proxy_set_header Connection &amp;quot;Upgrade&amp;quot;;
 &lt;li>&lt;a href="https://github.com/peaceiris/actions-hugo">peaceiris/actions-hugo&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://github.com/chux0519/chux0519.github.io/blob/e7e2cf708306ee26a9b398d25a69693a6c4c5086/.github/workflows/gh-pages.yml#L1">workflow 内容示例&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://gohugo.io/">hugo&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Leetcode Rust Easy</title><link>/posts/leetcode-rust-easy/</link><pubDate>Tue, 17 Dec 2019 10:37:14 +0800</pubDate><guid>/posts/leetcode-rust-easy/</guid><description>&lt;h2 id="算法系列">算法系列&lt;/h2>
+&lt;/ul></description></item><item><title>Leetcode Rust Easy</title><link>https://chux0519.github.io/posts/leetcode-rust-easy/</link><pubDate>Tue, 17 Dec 2019 10:37:14 +0800</pubDate><guid>https://chux0519.github.io/posts/leetcode-rust-easy/</guid><description>&lt;h2 id="算法系列">算法系列&lt;/h2>
 &lt;p>简单题&lt;/p>
 &lt;p>这里记录刷简单题过程中感到有意思的题目&lt;/p>
 &lt;h2 id="maximum-subarray-problem">Maximum subarray problem&lt;/h2>
@@ -141,7 +141,7 @@ proxy_set_header Connection &amp;quot;Upgrade&amp;quot;;
 &lt;p>&lt;a href="https://leetcode.com/problems/intersection-of-two-linked-lists/">160&lt;/a>题，找链表交叉点。
 需要解决的问题是，两个链表的长度不一定相同，要想办法使它们能够进行比较。&lt;/p>
 &lt;p>这里的解法参考：
-&lt;a href="https://leetcode.com/problems/intersection-of-two-linked-lists/discuss/49785/Java-solution-without-knowing-the-difference-in-len!/165648">讨论区&lt;/a>&lt;/p></description></item><item><title>Raspi3 Os 02</title><link>/posts/raspi3-os-02/</link><pubDate>Sun, 24 Nov 2019 15:52:14 +0800</pubDate><guid>/posts/raspi3-os-02/</guid><description>&lt;p>这是基于树莓派学习操作系统的第二部分，之前打通了工具链，能够使用 clang 进行交叉编译，使用 qemu 进行运行。&lt;/p>
+&lt;a href="https://leetcode.com/problems/intersection-of-two-linked-lists/discuss/49785/Java-solution-without-knowing-the-difference-in-len!/165648">讨论区&lt;/a>&lt;/p></description></item><item><title>Raspi3 Os 02</title><link>https://chux0519.github.io/posts/raspi3-os-02/</link><pubDate>Sun, 24 Nov 2019 15:52:14 +0800</pubDate><guid>https://chux0519.github.io/posts/raspi3-os-02/</guid><description>&lt;p>这是基于树莓派学习操作系统的第二部分，之前打通了工具链，能够使用 clang 进行交叉编译，使用 qemu 进行运行。&lt;/p>
 &lt;p>这一篇文章，期望完成&lt;/p>
 &lt;ol>
 &lt;li>C 语言的控制&lt;/li>
@@ -203,7 +203,7 @@ cargo install cargo-xbuild cargo-binutils
 &lt;ul>
 &lt;li>C 语言版本：&lt;a href="https://github.com/chux0519/raspi-os/tree/step1">step1&lt;/a> 分支&lt;/li>
 &lt;li>Rust 版本： &lt;a href="https://github.com/chux0519/raspi-os/tree/step1-rust">step1-rs&lt;/a> 分支&lt;/li>
-&lt;/ul></description></item><item><title>Raspi3 Os 01</title><link>/posts/raspi3-os-01/</link><pubDate>Sat, 16 Nov 2019 16:24:14 +0800</pubDate><guid>/posts/raspi3-os-01/</guid><description>&lt;p>基于树莓派 3 的操作系统学习，第一部分。&lt;/p>
+&lt;/ul></description></item><item><title>Raspi3 Os 01</title><link>https://chux0519.github.io/posts/raspi3-os-01/</link><pubDate>Sat, 16 Nov 2019 16:24:14 +0800</pubDate><guid>https://chux0519.github.io/posts/raspi3-os-01/</guid><description>&lt;p>基于树莓派 3 的操作系统学习，第一部分。&lt;/p>
 &lt;h2 id="工具链">工具链&lt;/h2>
 &lt;h3 id="qemu">qemu&lt;/h3>
 &lt;p>这是个模拟器，我们开发时，可以先用 qemu 模拟树莓派，不用每次真的用真机测试。
