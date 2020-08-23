@@ -1,0 +1,32 @@
+# The URL the site will be built for
+base_url = "https://hexyoungs.club"
+
+# Whether to do syntax highlighting
+# Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
+highlight_code = true
+
+# Whether to build a search index to be used later on by a JavaScript library
+build_search_index = true
+
+theme = "terminimal"
+
+# Sass compilation is required
+compile_sass = true
+
+[extra]
+logo_text = "Hexyoungs.club"
+
+menu_items = [
+    # each of these is optional, name and url are required
+    # $BASE_URL is going to be substituted by base_url from configuration
+    {name = "main", url = "$BASE_URL"},
+    {name = "blog", url = "$BASE_URL/blog"},
+    {name = "projects", url = "$BASE_URL/projects"},
+    
+    # set newtab to true to make the link open in new tab
+    {name = "github", url = "https://github.com/chux0519", newtab = true},
+]
+
+copyright_html = "&copy; Copyright 2020 by&nbsp<a href=\"https://hexyoungs.club\">hexyoungs</a>."
+background_color = "hexyoungs"
+accent_color = "hexyoungs"
