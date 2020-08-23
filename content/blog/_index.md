@@ -1,6 +1,7 @@
 +++
-title = "About Us"
+title = "Posts"
+show_pages = 5
+template = "index.html"
+sort_by = "date"
 +++
 
-# CS14401
-测试 CS14401
