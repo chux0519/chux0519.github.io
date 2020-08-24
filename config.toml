@@ -30,3 +30,4 @@ menu_items = [
 copyright_html = "&copy; Copyright 2020 by&nbsp<a href=\"https://hexyoungs.club\">hexyoungs</a>."
 background_color = "hexyoungs"
 accent_color = "hexyoungs"
+post_view_navigation_prompt = "感谢阅读!查看更多?"
