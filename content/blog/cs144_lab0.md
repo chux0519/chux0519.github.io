@@ -51,3 +51,6 @@ std::copy(s.begin(), s.end(), std::back_inserter(data));
 ## 结语
 
 整个 Lab0 难度不高，内容也不多，但可以调动我们的积极性，开始进入学习状态，期待下一个 Lab。
+
+另外，完整实现在 repo 的 lab0-ans 分支供同学们参考。
+
