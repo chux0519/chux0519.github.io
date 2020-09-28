@@ -76,5 +76,9 @@ flow control window 的定义和作用讲义也提供了，我这里摘要一下
 
 - [rfc793](https://tools.ietf.org/html/rfc793)
 
+## update 20200928
+
+2020 年秋季的课程也开始了，网络上之前的 pdf 已经找不到了，故休息一段时间，等课程同步到相关进度后，再继续这个系列。
+
 
 
