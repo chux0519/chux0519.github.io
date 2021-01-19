@@ -5,15 +5,15 @@ date = 2020-08-19T13:27:15+08:00
 
 上次参加 Rusty Days Hackathon 时，用 rust 实现了一下爬山算法。可以做到下面的效果。
 
-<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/assets/purr.0.png" width=200 alignment="left"/>
-<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/assets/purr.1.png" width=200 alignment="left"/>
-<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/assets/purr.2.png" width=200 alignment="left"/>
-<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/assets/purr.3.png" width=200 alignment="left"/>
-<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/assets/input.png" width=200 alignment="left"/>
-<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/assets/purr.4.png" width=200 alignment="left"/>
-<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/assets/purr.5.png" width=200 alignment="left"/>
-<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/assets/purr.7.png" width=200 alignment="left"/>
-<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/assets/purr.8.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.0.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.1.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.2.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.3.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/input.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.4.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.5.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.7.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.8.png" width=200 alignment="left"/>
 
 项目地址: https://github.com/chux0519/purr
 
