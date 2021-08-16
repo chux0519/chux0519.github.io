@@ -1,5 +1,5 @@
 # The URL the site will be built for
-base_url = "https://hexyoungs.club"
+base_url = "https://hexyoungs.com"
 
 # Whether to do syntax highlighting
 # Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
@@ -14,7 +14,7 @@ theme = "terminimal"
 compile_sass = true
 
 [extra]
-logo_text = "Hexyoungs.club"
+logo_text = "Hexyoungs"
 
 menu_items = [
     # each of these is optional, name and url are required
@@ -27,7 +27,7 @@ menu_items = [
     {name = "github", url = "https://github.com/chux0519", newtab = true},
 ]
 
-copyright_html = "&copy; Copyright 2020 by&nbsp<a href=\"https://hexyoungs.club\">hexyoungs</a>."
+copyright_html = "&copy; Copyright 2021 by&nbsp<a href=\"https://hexyoungs.com\">hexyoungs</a>."
 background_color = "hexyoungs"
 accent_color = "hexyoungs"
 post_view_navigation_prompt = "感谢阅读!查看更多?"
