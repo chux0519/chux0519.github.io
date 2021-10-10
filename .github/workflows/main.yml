@@ -20,7 +20,7 @@ jobs:
     - uses: actions/checkout@master
     - uses: chux0519/zola-scp-action@master
       with:
-        local: public/ # eg: dist/*
+        local: public/* # eg: dist/*
         remote: ${{ secrets.REMOTE }} # eg: /home/github-action/www
         host: ${{ secrets.HOST }} # eg: example.com
         port: 22
