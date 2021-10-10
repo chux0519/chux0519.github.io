@@ -15,6 +15,7 @@ jobs:
 
   deploy:
     name: chux0519/zola-scp-action
+    runs-on: ubuntu-latest
     steps:
     - uses: chux0519/zola-scp-action@master
       with:
