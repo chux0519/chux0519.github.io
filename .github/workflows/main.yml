@@ -17,6 +17,7 @@ jobs:
     name: chux0519/zola-scp-action
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - uses: chux0519/zola-scp-action@master
       with:
         local: public/ # eg: dist/*
