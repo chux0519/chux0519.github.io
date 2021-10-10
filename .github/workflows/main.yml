@@ -12,3 +12,15 @@ jobs:
         PAGES_BRANCH: gh-pages
         BUILD_FLAGS: -u https://hexyoungs.github.io
         TOKEN: ${{ secrets.TOKEN }}
+
+  deploy:
+    name: chux0519/zola-scp-action
+    steps:
+    - uses: chux0519/zola-scp-action
+    - with:
+      local: public/ # eg: dist/*
+      remote: ${{ secrets.REMOTE }} # eg: /home/github-action/www
+      host: ${{ secrets.HOST }} # eg: example.com
+      port: 22
+      user: ${{ secrets.USER }} # eg: github-action
+      key: ${{ secrets.KEY }} # eg: -----BEGIN OPENSSH PRIVATE KEY-----\nHEIiyzh5cT7hN...
