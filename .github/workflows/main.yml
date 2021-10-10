@@ -16,7 +16,7 @@ jobs:
   deploy:
     name: chux0519/zola-scp-action
     steps:
-    - uses: chux0519/zola-scp-action
+    - uses: chux0519/zola-scp-action@master
     - with:
       local: public/ # eg: dist/*
       remote: ${{ secrets.REMOTE }} # eg: /home/github-action/www
