@@ -10,9 +10,10 @@ taxonomies = [
     {name = "tags"}
 ]
 
+[markdown]
 # Code highlighting
 highlight_code = true
-highlight_theme = "boron"
+highlight_theme = "base16-ocean-dark"
 
 [extra]
 

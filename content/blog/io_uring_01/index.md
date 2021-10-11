@@ -15,7 +15,7 @@ date = 2021-10-10T14:30:15+08:00
 
 Linux 提供了许多读写操作的系统调用，比如 [read(2)](https://man7.org/linux/man-pages/man2/read.2.html), [write(2)](https://man7.org/linux/man-pages/man2/write.2.html)
 
-io_uring 提供的是 [readv(2)](https://man7.org/linux/man-pages/man2/readv.2.html), [writev(2)](https://man7.org/linux/man-pages/man2/writev.2.html)
+io_uring 常用的是 [readv(2)](https://man7.org/linux/man-pages/man2/readv.2.html), [writev(2)](https://man7.org/linux/man-pages/man2/writev.2.html)
 
 以读操作为例，readv 被认为优于 read，因为
 
@@ -106,25 +106,50 @@ PS: 上面提到 CQE 的顺序不保证和 SQE 一致，实际上是可以设置
 
 ```C
 struct io_uring_sqe {
-  __u8  opcode;    /* type of operation for this sqe */
-  __u8  flags;    /* IOSQE_ flags */
-  __u16  ioprio;    /* ioprio for the request */
-  __s32  fd;    /* file descriptor to do IO on */
-  __u64  off;    /* offset into file */
-  __u64  addr;    /* pointer to buffer or iovecs */
-  __u32  len;    /* buffer size or number of iovecs */
-  union {
-    __kernel_rwf_t  rw_flags;
-    __u32    fsync_flags;
-    __u16    poll_events;
-    __u32    sync_range_flags;
-    __u32    msg_flags;
-  };
-  __u64  user_data;  /* data to be passed back at completion time */
-  union {
-    __u16  buf_index;  /* index into fixed buffers, if used */
-    __u64  __pad2[3];
-  };
+    __u8    opcode;         /* type of operation for this sqe */
+    __u8    flags;          /* IOSQE_ flags */
+    __u16   ioprio;         /* ioprio for the request */
+    __s32   fd;             /* file descriptor to do IO on */
+    union {
+        __u64       off;    /* offset into file */
+        __u64       addr2;
+    };
+    union {
+        __u64       addr;   /* pointer to buffer or iovecs */
+        __u64       splice_off_in;
+    };
+    __u32   len;            /* buffer size or number of iovecs */
+    union {
+        __kernel_rwf_t      rw_flags;
+        __u32               fsync_flags;
+        __u16               poll_events;
+        __u32               sync_range_flags;
+        __u32               msg_flags;
+        __u32               timeout_flags;
+        __u32               accept_flags;
+        __u32               cancel_flags;
+        __u32               open_flags;
+        __u32               statx_flags;
+        __u32               fadvise_advice;
+        __u32               splice_flags;
+    };
+    /* data to be passed back at completion time */
+    __u64   user_data;
+    union {
+        struct {
+            /* pack this to avoid bogus arm OABI complaints */
+            union {
+                /* index into fixed buffers, if used */
+                __u16       buf_index;
+                /* for grouped buffer selection */
+                __u16       buf_group;
+            } __attribute__((packed));
+            /* personality to use, if used */
+            __u16   personality;
+            __s32   splice_fd_in;
+        };
+        __u64       __pad2[3];
+    };
 };
 ```
 
