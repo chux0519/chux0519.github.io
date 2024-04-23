@@ -33,3 +33,5 @@ copyright_html = "&copy; Copyright 2024 by&nbsp<a href=\"https://chux0519.github
 background_color = "hexyoungs"
 accent_color = "hexyoungs"
 post_view_navigation_prompt = "感谢阅读!查看更多?"
+favicon = "/favicon.png"
+favicon_mimetype = "image/png"
