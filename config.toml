@@ -1,9 +1,7 @@
 # The URL the site will be built for
-base_url = "https://hexyoungs.com"
-
+base_url = "https://chux0519.github.io"
 generate_feed = true
 feed_filename = "rss.xml"
-
 
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = true
@@ -18,7 +16,7 @@ highlight_code = true
 highlight_theme = "base16-ocean-dark"
 
 [extra]
-logo_text = "Hexyoungs"
+logo_text = "chux0519"
 
 menu_items = [
     # each of these is optional, name and url are required
@@ -31,7 +29,7 @@ menu_items = [
     {name = "github", url = "https://github.com/chux0519", newtab = true},
 ]
 
-copyright_html = "&copy; Copyright 2021 by&nbsp<a href=\"https://hexyoungs.com\">hexyoungs</a>."
+copyright_html = "&copy; Copyright 2024 by&nbsp<a href=\"https://chux0519.github.io\">chux0519</a>."
 background_color = "hexyoungs"
 accent_color = "hexyoungs"
 post_view_navigation_prompt = "感谢阅读!查看更多?"
