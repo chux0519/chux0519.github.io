@@ -2,6 +2,32 @@
 title = "个人项目"
 +++
 
+## wayab
+
+<video  width="100%" autoplay loop controls>
+    <source src="https://user-images.githubusercontent.com/14276970/144039851-497ed32e-fd20-4b27-9c84-86b1bab2fccd.mp4" type="video/mp4">
+    您的浏览器不支持 video 标签。
+</video>
+
+
+wayland 下动态壁纸软件，支持多屏幕输出，使用 GPU 实现（初衷就是发现有个开源项目 cpu 的实现十分占用资源，于是简单实现了一版）
+
+项目地址：[wayab](https://github.com/chux0519/wayab)
+- - -
+
+## runcat-tray
+
+<img src="https://raw.githubusercontent.com/chux0519/runcat-tray/master/runcat.gif" width="36"/>
+<img src="https://c.tenor.com/5IWFYb4D1WMAAAAi/swan_hack-dab.gif" width="36" />
+<img src="https://github.githubassets.com/images/mona-loading-default.gif" width="36" />
+<img src="https://cultofthepartyparrot.com/guests/hd/partyblobcat.gif" width="36" />
+
+Linux 下的 runcat，支持自定义图标
+
+
+项目地址：[runcat-tray](https://github.com/chux0519/runcat-tray)
+- - -
+
 ## pegasocks
 
 <img style="margin: 15px;" src="https://raw.githubusercontent.com/chux0519/pegasocks/master/logo/icon.svg" width="150" align="left" />
