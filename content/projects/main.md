@@ -6,7 +6,7 @@ title = "个人项目"
 
 <video  width="100%" autoplay loop controls>
     <source src="https://user-images.githubusercontent.com/14276970/144039851-497ed32e-fd20-4b27-9c84-86b1bab2fccd.mp4" type="video/mp4">
-    您的浏览器不支持 video 标签。
+    您的浏览器不支持 video 标签
 </video>
 
 
