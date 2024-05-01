@@ -45,4 +45,4 @@ Hi, 我是一个 unix 系统的爱好者，喜欢折腾系统，喜欢捡垃圾�
 
 - <span class="intro link"><img style="filter: invert(100%);" height="12" width="12" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/github.svg" /> [github](https://github.com/chux0519)</span>
 - <span class="intro link"><img style="filter: invert(100%);" height="12" width="12" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/twitter.svg" /> [twitter](https://twitter.com/chuxdesign)</span>
-- <span class="intro link"><img style="filter: invert(100%);" height="12" width="12" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/rss.svg" /> [rss](./rss.xml)</span>
+- <span class="intro link"><img style="filter: invert(100%);" height="12" width="12" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/rss.svg" /> [rss](https://chux0519.github.io/rss.xml)</span>

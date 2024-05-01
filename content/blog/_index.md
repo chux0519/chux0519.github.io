@@ -1,6 +1,6 @@
 +++
 title = "Posts"
-show_pages = 5
+paginate_by = 5
 template = "index.html"
 sort_by = "date"
 +++
