@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="robots" content="noodp"/>
+
+    <link rel="stylesheet" href="https://chux0519.github.io/style.css">
+    <link rel="stylesheet" href="https://chux0519.github.io/color/hexyoungs.css">
+
+    <link rel="stylesheet" href="https://chux0519.github.io/font-hack-subset.css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="https://chux0519.github.io/rss.xml">
+
+
+        <link rel="shortcut icon" type="image&#x2F;png" href="/favicon.png">
+    
+    </head>
+
+<body class="">
+<div class="container">
+    
+    <header class="header">
+        <div class="header__inner">
+            <div class="header__logo">
+                    
+                <a href="https://chux0519.github.io" style="text-decoration: none;">
+                    <div class="logo">
+                            chux0519
+                        </div>
+                </a>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <ul class="menu__inner">
+                <li><a href="https://chux0519.github.io">main</a></li>
+            
+                <li class="active"><a href="https://chux0519.github.io/blog">blog</a></li>
+            
+                <li><a href="https://chux0519.github.io/projects">projects</a></li>
+            
+                <li><a href="https://github.com/chux0519" target="_blank" rel="noopener noreferrer">github</a></li>
+            </ul>
+        </nav>
+    
+    </header>
+    
+
+    <div class="content">
+        
+    <div class="post">
+        
+    <h1 class="post-title"><a href="https://chux0519.github.io/blog/cs144-lab2/">CS144 Lab2 学习笔记</a></h1>
+    <div class="post-meta-inline">
+        
+    <span class="post-date">
+            2020-09-04
+        </span>
+
+    </div>
+
+    
+
+        
+        <div class="post-content">
+            <p>CS144 是一门关于计算机网络的斯坦福大学的公开课。课程的实验是动手写一个用户态的 TCP 协议，本文是第三篇。</p>
+<ul>
+<li>
+<p>课程链接: https://cs144.github.io/</p>
+</li>
+<li>
+<p>本文讲义: https://cs144.github.io/assignments/lab2.pdf</p>
+</li>
+<li>
+<p>本文相关代码: https://github.com/hexyoungs/tcplab/tree/lab2</p>
+</li>
+</ul>
+<h2 id="update-20200928">update 20200928</h2>
+<p>2020 年秋季的课程也开始了，网络上之前的 pdf 已经找不到了，故休息一段时间，等课程同步到相关进度后，再继续这个系列。</p>
+<span id="continue-reading"></span><h2 id="jiang-yi">讲义</h2>
+<p>Lab2 的内容是实现 TCP 的接收端，讲义从接收端的指责说起，引出我们需要实现的两个重要点，然后给出样板代码和测试用例留作实验。</p>
+<p>简单摘要一下，TCP 的接收端有两个职责：</p>
+<ol>
+<li>告诉发送端，目前已经成功重组了多少数据（acknowledgment）</li>
+<li>告诉发送端，什么范围的数据是目前允许接收的（flow control window）</li>
+</ol>
+<p>为了实现这两个点，TCP 协议有一系列相关的字段和约定，我们要做的就是实现这些约定。</p>
+<h2 id="yao-dian">要点</h2>
+<h3 id="seqno-absolute-seqno-stream-index-de-zhuan-huan">seqno/absolute seqno/stream index 的转换</h3>
+<p>要实现 ack（职责一），首先要理解下面的三个定义，讲义里面为我们做了辨析，见下表</p>
+<table><thead><tr><th>区别</th><th>TCP 协议中的序列号</th><th>绝对序列号</th><th>字节流的 index</th></tr></thead><tbody>
+<tr><td>起始值</td><td>从 ISN 开始</td><td>从 0 开始</td><td>从 0 开始</td></tr>
+<tr><td>SYN 和 FIN</td><td>包含 SYN 和 FIN</td><td>包含 SYN 和 FIN</td><td>不包含</td></tr>
+<tr><td>值范围</td><td>32 位，溢出后变为 0</td><td>64位</td><td>64位</td></tr>
+<tr><td>术语</td><td>seqno</td><td>absolute seqno</td><td>stream index</td></tr>
+</tbody></table>
+<p>有了这些辨析，任务一就出现了，实现一个 WrappingInt32，负责 <u>TCP 协议中的序列号</u>、<u>绝对序列号</u>以及 Lab1 中需要的<u>字节流的 index</u> 这三者的互转</p>
+<p>整体难度不大，只需要理清楚概念，实现并通过测试用例即可。</p>
+<h3 id="flow-control-window">flow control window</h3>
+<p>TCP 协议的封装和解包在实验中并不要求实现，课程库已经包含在内了，实验重点是实现关键数据的获取和数据包的接收逻辑。</p>
+<p>接收端需要提供对发送端的反馈，因此需要实现 ackno 和 window size 的函数，这两个值即为关键数据。</p>
+<p>flow control window 的定义和作用讲义也提供了，我这里摘要一下：</p>
+<p>“它是一个 stream index / seqno 的区间，整个 window 的最左端，就是 ackno，window 的长度即为 size。window 的作用就是通知发送端: 接收端期望接收在这个范围内的数据。以此减少发送端做无用功的可能性。”</p>
+<p>如图</p>
+<p><img src="https://i.imgur.com/gfqzVDI.png" alt="" /></p>
+<p>只要数据包和 window 存在重叠部分(图中的情况均应接收)，那么接收端就应该接收数据并且开始整合数据。</p>
+<p>因此清楚了 window 的定义和作用之后，就可以实现接收端的核心逻辑了：</p>
+<ol>
+<li>负责初始化 ISN，在接受到第一个 SYN 的包时，它的 seqno 就是 ISN</li>
+<li>判断该数据包是否是再我们需要的接收窗口中
+<ul>
+<li>如果是，那么调用 Lab1 实现的工具进行整合，并且返回 true</li>
+<li>否则直接丢弃</li>
+</ul>
+</li>
+</ol>
+<p>接收逻辑描述起来很简单，但细节较多，需要配合测试用例逐一通过。这个过程中可能发现 Lab1 的某些实现是不符合要求的，在这里也可以一并修改。</p>
+<h2 id="jie-yu">结语</h2>
+<p>这一节的细节比较多，需要小心仔细地实现，遇到自己的理解和测试用例发生偏差时，多考虑是自己的理解问题，重新设计自己的实现。</p>
+<p>完整实现在 repo 的 lab2-ans 分支供同学们参考。</p>
+<h2 id="can-kao-zi-liao">参考资料</h2>
+<ul>
+<li><a href="https://tools.ietf.org/html/rfc793">rfc793</a></li>
+</ul>
+
+        </div>
+
+        
+    </div>
+
+    </div>
+
+    
+    <footer class="footer">
+        <div class="footer__inner">
+                <div class="copyright copyright--user">&copy; Copyright 2024 by&nbsp<a href="https://chux0519.github.io">chux0519</a>.</div>
+            </div>
+    </footer>
+    
+
+</div>
+</body>
+
+</html>

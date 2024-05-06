@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="robots" content="noodp"/>
+
+    <link rel="stylesheet" href="https://chux0519.github.io/style.css">
+    <link rel="stylesheet" href="https://chux0519.github.io/color/hexyoungs.css">
+
+    <link rel="stylesheet" href="https://chux0519.github.io/font-hack-subset.css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="https://chux0519.github.io/rss.xml">
+
+
+        <link rel="shortcut icon" type="image&#x2F;png" href="/favicon.png">
+    
+    </head>
+
+<body class="">
+<div class="container">
+    
+    <header class="header">
+        <div class="header__inner">
+            <div class="header__logo">
+                    
+                <a href="https://chux0519.github.io" style="text-decoration: none;">
+                    <div class="logo">
+                            chux0519
+                        </div>
+                </a>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <ul class="menu__inner">
+                <li><a href="https://chux0519.github.io">main</a></li>
+            
+                <li class="active"><a href="https://chux0519.github.io/blog">blog</a></li>
+            
+                <li><a href="https://chux0519.github.io/projects">projects</a></li>
+            
+                <li><a href="https://github.com/chux0519" target="_blank" rel="noopener noreferrer">github</a></li>
+            </ul>
+        </nav>
+    
+    </header>
+    
+
+    <div class="content">
+        
+    <div class="post">
+        
+    <h1 class="post-title"><a href="https://chux0519.github.io/blog/purr/">爬山算法拟合图片</a></h1>
+    <div class="post-meta-inline">
+        
+    <span class="post-date">
+            2020-08-19
+        </span>
+
+    </div>
+
+    
+
+        
+        <div class="post-content">
+            <p>上次参加 Rusty Days Hackathon 时，用 rust 实现了一下爬山算法。可以做到下面的效果。</p>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.0.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.1.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.2.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.3.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/input.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.4.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.5.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.7.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.8.png" width=200 alignment="left"/>
+<p>项目地址: https://github.com/chux0519/purr</p>
+<span id="continue-reading"></span><h2 id="qi-yuan">起源</h2>
+<p>这个项目是在 hackathon 期间完成的，主题大概是使用简单的规则，完成震惊的效果。我就想起几年前看过的另一个项目，叫做 <a href="https://github.com/fogleman/primitive">primitive</a>，是 golang 的实现，核心就是爬山算法。于是我使用 rust 将它重新实现了一次，purr 就诞生了。</p>
+<h2 id="te-xing">特性</h2>
+<p>purr 支持所有 golang 版本的基础图形，大多数的选项都直接支持，大部分的场景下，可以直接将 primitive 的 binary 替换为 purr。</p>
+<p>另外，purr 做了一些优化，使得它比 golang 版本运行得更快，在部分情况下甚至达到了三倍速度(贝塞尔曲线)，详情见 <a href="https://github.com/chux0519/purr#about-performance">performance</a>。即便如此，这个程序的算法核心依旧是 CPU 密集型，意味着它非常吃 CPU 性能，非常耗电。</p>
+<h2 id="you-hua-xi-jie">优化细节</h2>
+<p>我在 reddit 上发了关于 purr 的帖子，有人好奇做到比 golang 快的优化细节，这里讲我想到的两个点。</p>
+<p>第一是，原版本的实现里面，每个 worker 中保存了三份图片的 buffer，分别是原始图，当前图，添加正在随机图形后的图的 buffer。然后在计算当前尝试的分数时，过程如下：</p>
+<pre data-lang="go" style="background-color:#2b303b;color:#c0c5ce;" class="language-go "><code class="language-go" data-lang="go"><span style="color:#b48ead;">func </span><span>(</span><span style="color:#bf616a;">worker </span><span>*</span><span style="color:#b48ead;">Worker</span><span>) </span><span style="color:#8fa1b3;">Energy</span><span>(</span><span style="color:#bf616a;">shape </span><span style="color:#b48ead;">Shape</span><span>, </span><span style="color:#bf616a;">alpha </span><span style="color:#b48ead;">int</span><span>) </span><span style="color:#b48ead;">float64 </span><span>{
+</span><span>	</span><span style="color:#bf616a;">worker</span><span>.</span><span style="color:#bf616a;">Counter</span><span>++
+</span><span>	</span><span style="color:#bf616a;">lines </span><span>:= </span><span style="color:#bf616a;">shape</span><span>.</span><span style="color:#bf616a;">Rasterize</span><span>()
+</span><span>	</span><span style="color:#65737e;">// worker.Heatmap.Add(lines)
+</span><span>	</span><span style="color:#bf616a;">color </span><span>:= </span><span style="color:#bf616a;">computeColor</span><span>(</span><span style="color:#bf616a;">worker</span><span>.</span><span style="color:#bf616a;">Target</span><span>, </span><span style="color:#bf616a;">worker</span><span>.</span><span style="color:#bf616a;">Current</span><span>, </span><span style="color:#bf616a;">lines</span><span>, </span><span style="color:#bf616a;">alpha</span><span>)
+</span><span>	</span><span style="color:#bf616a;">copyLines</span><span>(</span><span style="color:#bf616a;">worker</span><span>.</span><span style="color:#bf616a;">Buffer</span><span>, </span><span style="color:#bf616a;">worker</span><span>.</span><span style="color:#bf616a;">Current</span><span>, </span><span style="color:#bf616a;">lines</span><span>)
+</span><span>	</span><span style="color:#bf616a;">drawLines</span><span>(</span><span style="color:#bf616a;">worker</span><span>.</span><span style="color:#bf616a;">Buffer</span><span>, </span><span style="color:#bf616a;">color</span><span>, </span><span style="color:#bf616a;">lines</span><span>)
+</span><span>	</span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">differencePartial</span><span>(</span><span style="color:#bf616a;">worker</span><span>.</span><span style="color:#bf616a;">Target</span><span>, </span><span style="color:#bf616a;">worker</span><span>.</span><span style="color:#bf616a;">Current</span><span>, </span><span style="color:#bf616a;">worker</span><span>.</span><span style="color:#bf616a;">Buffer</span><span>, </span><span style="color:#bf616a;">worker</span><span>.</span><span style="color:#bf616a;">Score</span><span>, </span><span style="color:#bf616a;">lines</span><span>)
+</span><span>}
+</span></code></pre>
+<p>过程可以抽象为：</p>
+<ol>
+<li>获取扫描线</li>
+<li>计算填充颜色</li>
+<li>渲染临时 buffer </li>
+<li>使用原始 buffer，当前图 buffer，以及临时 buffer 计算出得分</li>
+</ol>
+<p>实际上这里的临时 buffer 只用于计算分数，于是我修改了一下 diff 函数，使得它直接根据原始 buffer，当前图 buffer 和扫描线以及颜色就直接计算得分。这样，便可以省去一次对临时 buffer 的渲染。爬山算法的每一步都有成千上万次这样的过程，这样节省下来的时间就更多了。</p>
+<p>purr 的实现在这里：<a href="https://github.com/chux0519/purr/blob/64a00a5de39848a1269af56602587ca3e6710c7b/src/core/hill_climb.rs#L48-L53">src/core/hill_climb.rs#L48-L53</a></p>
+<p>第二点可能的因素是，我使用的随机数生成器是 <code>SmallRng</code>，按照文档来说，它会选择平台上速度最快的实现，不考虑密码学和安全特性，这样的生成器也许也会带来比较多的速度加持。</p>
+<p><code>SmallRng</code> 的原话：</p>
+<blockquote>
+<p>The PRNG algorithm in SmallRng is chosen to be efficient on the current platform, without consideration for cryptography or security</p>
+</blockquote>
+<h2 id="zong-jie">总结</h2>
+<p>整个项目还剩一些小的边角没有打磨，后续会抽空继续完善，整体来讲，这次 hackathon 还是收益颇多的。</p>
+
+        </div>
+
+        
+    </div>
+
+    </div>
+
+    
+    <footer class="footer">
+        <div class="footer__inner">
+                <div class="copyright copyright--user">&copy; Copyright 2024 by&nbsp<a href="https://chux0519.github.io">chux0519</a>.</div>
+            </div>
+    </footer>
+    
+
+</div>
+</body>
+
+</html>

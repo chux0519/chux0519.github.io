@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="robots" content="noodp"/>
+
+    <link rel="stylesheet" href="https://chux0519.github.io/style.css">
+    <link rel="stylesheet" href="https://chux0519.github.io/color/hexyoungs.css">
+
+    <link rel="stylesheet" href="https://chux0519.github.io/font-hack-subset.css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="https://chux0519.github.io/rss.xml">
+
+
+        <link rel="shortcut icon" type="image&#x2F;png" href="/favicon.png">
+    
+    </head>
+
+<body class="">
+<div class="container">
+    
+    <header class="header">
+        <div class="header__inner">
+            <div class="header__logo">
+                    
+                <a href="https://chux0519.github.io" style="text-decoration: none;">
+                    <div class="logo">
+                            chux0519
+                        </div>
+                </a>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <ul class="menu__inner">
+                <li><a href="https://chux0519.github.io">main</a></li>
+            
+                <li class="active"><a href="https://chux0519.github.io/blog">blog</a></li>
+            
+                <li><a href="https://chux0519.github.io/projects">projects</a></li>
+            
+                <li><a href="https://github.com/chux0519" target="_blank" rel="noopener noreferrer">github</a></li>
+            </ul>
+        </nav>
+    
+    </header>
+    
+
+    <div class="content">
+        
+        <div class="posts">
+                <div class="post on-list">
+                    
+    <h1 class="post-title"><a href="https://chux0519.github.io/blog/purr/">爬山算法拟合图片</a></h1>
+    <div class="post-meta-inline">
+        
+    <span class="post-date">
+            2020-08-19
+        </span>
+
+    </div>
+
+    
+
+                    
+        <div class="post-content">
+            <p>上次参加 Rusty Days Hackathon 时，用 rust 实现了一下爬山算法。可以做到下面的效果。</p>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.0.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.1.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.2.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.3.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/input.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.4.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.5.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.7.png" width=200 alignment="left"/>
+<img style="display: inline;" src="https://raw.githubusercontent.com/chux0519/purr/master/purrmitive/assets/purr.8.png" width=200 alignment="left"/>
+<p>项目地址: https://github.com/chux0519/purr</p>
+
+        </div>
+        <div>
+            <!-- &#xFE0E; -- force text style - some devices render this as emoji -->
+            <a class="read-more button" href="https://chux0519.github.io/blog/purr/">
+                <span class="button__text">Read more</span>&nbsp;
+                <span class="button__icon">&#8617;&#xFE0E;</span>
+            </a>
+        </div>
+    
+
+                </div>
+            
+                <div class="post on-list">
+                    
+    <h1 class="post-title"><a href="https://chux0519.github.io/blog/non-blocking-tornado/">Non Blocking Tornado</a></h1>
+    <div class="post-meta-inline">
+        
+    <span class="post-date">
+            2020-06-09
+        </span>
+
+    </div>
+
+    
+
+                    
+        <div class="post-content">
+            <p>tornado 是一个 python 的高性能 web 框架。最近在工作中遇到一个基于它的项目，在接口处该项目使用了大量的同步 io （数据库操作是同步的），意味着，某一时刻，在数据库 io 操作的时候，主线程是被阻塞的。这时新进来的请求得不到及时处理，会影响吞吐量。用户请求排队的时间也会变长。这里记录两种修改方式，提高吞吐量，使得这些操作不阻塞主线程。</p>
+
+        </div>
+        <div>
+            <!-- &#xFE0E; -- force text style - some devices render this as emoji -->
+            <a class="read-more button" href="https://chux0519.github.io/blog/non-blocking-tornado/">
+                <span class="button__text">Read more</span>&nbsp;
+                <span class="button__icon">&#8617;&#xFE0E;</span>
+            </a>
+        </div>
+    
+
+                </div>
+            <div class="pagination">
+                <div class="pagination__buttons">
+                    <span class="button previous">
+                        <a href="https://chux0519.github.io/blog/page/2/">
+                            <span class="button__icon">←</span>&nbsp;
+                            <span class="button__text">Newer posts</span>
+                        </a>
+                    </span>
+                </div>
+            </div>
+            
+            
+        </div>
+        
+    </div>
+
+    
+    <footer class="footer">
+        <div class="footer__inner">
+                <div class="copyright copyright--user">&copy; Copyright 2024 by&nbsp<a href="https://chux0519.github.io">chux0519</a>.</div>
+            </div>
+    </footer>
+    
+
+</div>
+</body>
+
+</html>

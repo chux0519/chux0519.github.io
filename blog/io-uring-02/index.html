@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="robots" content="noodp"/>
+
+    <link rel="stylesheet" href="https://chux0519.github.io/style.css">
+    <link rel="stylesheet" href="https://chux0519.github.io/color/hexyoungs.css">
+
+    <link rel="stylesheet" href="https://chux0519.github.io/font-hack-subset.css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="https://chux0519.github.io/rss.xml">
+
+
+        <link rel="shortcut icon" type="image&#x2F;png" href="/favicon.png">
+    
+    </head>
+
+<body class="">
+<div class="container">
+    
+    <header class="header">
+        <div class="header__inner">
+            <div class="header__logo">
+                    
+                <a href="https://chux0519.github.io" style="text-decoration: none;">
+                    <div class="logo">
+                            chux0519
+                        </div>
+                </a>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <ul class="menu__inner">
+                <li><a href="https://chux0519.github.io">main</a></li>
+            
+                <li class="active"><a href="https://chux0519.github.io/blog">blog</a></li>
+            
+                <li><a href="https://chux0519.github.io/projects">projects</a></li>
+            
+                <li><a href="https://github.com/chux0519" target="_blank" rel="noopener noreferrer">github</a></li>
+            </ul>
+        </nav>
+    
+    </header>
+    
+
+    <div class="content">
+        
+    <div class="post">
+        
+    <h1 class="post-title"><a href="https://chux0519.github.io/blog/io-uring-02/">liburing - cat</a></h1>
+    <div class="post-meta-inline">
+        
+    <span class="post-date">
+            2021-10-11
+        </span>
+
+    </div>
+
+    
+
+        
+        <div class="post-content">
+            <p>结合<a href="/blog/io-uring-01/">上回</a>，大部分代码是样板代码，liburing 是为了简化我们手工调用 io_uring 实现的一个包装库</p>
+<p>接下来用 liburing 实现 cat</p>
+<span id="continue-reading"></span><h2 id="cqe">CQE</h2>
+<p>先看代码</p>
+<pre data-lang="C" style="background-color:#2b303b;color:#c0c5ce;" class="language-C "><code class="language-C" data-lang="C"><span style="color:#b48ead;">int </span><span style="color:#8fa1b3;">get_completion_and_print</span><span>(</span><span style="color:#b48ead;">struct</span><span> io_uring *</span><span style="color:#bf616a;">ring</span><span>) {
+</span><span>    </span><span style="color:#b48ead;">struct</span><span> io_uring_cqe *cqe;
+</span><span>    </span><span style="color:#b48ead;">int</span><span> ret = </span><span style="color:#bf616a;">io_uring_wait_cqe</span><span>(ring, &amp;cqe);
+</span><span>    </span><span style="color:#b48ead;">if </span><span>(ret &lt; </span><span style="color:#d08770;">0</span><span>) {
+</span><span>        </span><span style="color:#96b5b4;">perror</span><span>(&quot;</span><span style="color:#a3be8c;">io_uring_wait_cqe</span><span>&quot;);
+</span><span>        </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">1</span><span>;
+</span><span>    }
+</span><span>    </span><span style="color:#b48ead;">if </span><span>(cqe-&gt;res &lt; </span><span style="color:#d08770;">0</span><span>) {
+</span><span>        </span><span style="color:#96b5b4;">fprintf</span><span>(stderr, &quot;</span><span style="color:#a3be8c;">Async readv failed.</span><span style="color:#96b5b4;">\n</span><span>&quot;);
+</span><span>        </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">1</span><span>;
+</span><span>    }
+</span><span>    </span><span style="color:#b48ead;">struct</span><span> file_info *fi = </span><span style="color:#bf616a;">io_uring_cqe_get_data</span><span>(cqe);
+</span><span>    </span><span style="color:#b48ead;">int</span><span> blocks = (</span><span style="color:#b48ead;">int</span><span>) fi-&gt;file_sz / BLOCK_SZ;
+</span><span>    </span><span style="color:#b48ead;">if </span><span>(fi-&gt;file_sz % BLOCK_SZ) blocks++;
+</span><span>    </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#b48ead;">int</span><span> i = </span><span style="color:#d08770;">0</span><span>; i &lt; blocks; i ++)
+</span><span>        </span><span style="color:#bf616a;">output_to_console</span><span>(fi-&gt;iovecs[i].</span><span style="color:#bf616a;">iov_base</span><span>, fi-&gt;iovecs[i].</span><span style="color:#bf616a;">iov_len</span><span>);
+</span><span>
+</span><span>    </span><span style="color:#bf616a;">io_uring_cqe_seen</span><span>(ring, cqe);
+</span><span>    </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">0</span><span>;
+</span><span>}
+</span></code></pre>
+<p>这里我们不用再自己操心各种内存屏障的问题，对 cqe 的操作通过 liburing 完成。</p>
+<h2 id="ti-jiao-sqe">提交 SQE</h2>
+<p>同样地，提交部分，也全部通过 liburing 操作 SQE</p>
+<pre data-lang="C" style="background-color:#2b303b;color:#c0c5ce;" class="language-C "><code class="language-C" data-lang="C"><span>    </span><span style="color:#65737e;">/* Get an SQE */
+</span><span>    </span><span style="color:#b48ead;">struct</span><span> io_uring_sqe *sqe = </span><span style="color:#bf616a;">io_uring_get_sqe</span><span>(ring);
+</span><span>    </span><span style="color:#65737e;">/* Setup a readv operation */
+</span><span>    </span><span style="color:#bf616a;">io_uring_prep_readv</span><span>(sqe, file_fd, fi-&gt;iovecs, blocks, </span><span style="color:#d08770;">0</span><span>);
+</span><span>    </span><span style="color:#65737e;">/* Set user data */
+</span><span>    </span><span style="color:#bf616a;">io_uring_sqe_set_data</span><span>(sqe, fi);
+</span><span>    </span><span style="color:#65737e;">/* Finally, submit the request */
+</span><span>    </span><span style="color:#bf616a;">io_uring_submit</span><span>(ring);
+</span></code></pre>
+<h2 id="chu-shi-hua-he-qing-li">初始化和清理</h2>
+<p>初始化 liburing 使用</p>
+<blockquote>
+<p>io_uring_queue_init(QUEUE_DEPTH, &amp;ring, 0);</p>
+</blockquote>
+<p>程序退出前，清理</p>
+<blockquote>
+<p>io_uring_queue_exit(&amp;ring);</p>
+</blockquote>
+<h2 id="zong-jie">总结</h2>
+<p>总体代码量减少很多，并且不用手工 mmap 和考虑内存屏障问题。 </p>
+<h2 id="can-kao">参考</h2>
+<ul>
+<li><a href="https://unixism.net/loti/tutorial/cat_liburing.html">cat_liburing</a></li>
+<li><a href="https://github.com/chux0519/io_uring_example/">代码</a></li>
+</ul>
+
+        </div>
+
+        
+    </div>
+
+    </div>
+
+    
+    <footer class="footer">
+        <div class="footer__inner">
+                <div class="copyright copyright--user">&copy; Copyright 2024 by&nbsp<a href="https://chux0519.github.io">chux0519</a>.</div>
+            </div>
+    </footer>
+    
+
+</div>
+</body>
+
+</html>

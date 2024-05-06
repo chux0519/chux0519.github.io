@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="robots" content="noodp"/>
+
+    <link rel="stylesheet" href="https://chux0519.github.io/style.css">
+    <link rel="stylesheet" href="https://chux0519.github.io/color/hexyoungs.css">
+
+    <link rel="stylesheet" href="https://chux0519.github.io/font-hack-subset.css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="https://chux0519.github.io/rss.xml">
+
+
+        <link rel="shortcut icon" type="image&#x2F;png" href="/favicon.png">
+    
+    </head>
+
+<body class="">
+<div class="container">
+    
+    <header class="header">
+        <div class="header__inner">
+            <div class="header__logo">
+                    
+                <a href="https://chux0519.github.io" style="text-decoration: none;">
+                    <div class="logo">
+                            chux0519
+                        </div>
+                </a>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <ul class="menu__inner">
+                <li><a href="https://chux0519.github.io">main</a></li>
+            
+                <li class="active"><a href="https://chux0519.github.io/blog">blog</a></li>
+            
+                <li><a href="https://chux0519.github.io/projects">projects</a></li>
+            
+                <li><a href="https://github.com/chux0519" target="_blank" rel="noopener noreferrer">github</a></li>
+            </ul>
+        </nav>
+    
+    </header>
+    
+
+    <div class="content">
+        
+    <div class="post">
+        
+    <h1 class="post-title"><a href="https://chux0519.github.io/blog/pass/">密码管理器</a></h1>
+    <div class="post-meta-inline">
+        
+    <span class="post-date">
+            2021-10-03
+        </span>
+
+    </div>
+
+    
+
+        
+        <div class="post-content">
+            <p>随着使用的软件、服务越来越多，我们需要记忆的密码也越变越多，为了安全性，应该避免使用弱密码或重复的密码，于是我之前选择了 1password 这个服务，前两个月我的订阅刚刚过期，但我又不再想续订了，我认为这个产品我没有花得很值，于是调研了一些替代品，我的需求是，可以同步、可以方便的在多端使用。</p>
+<p>最终看到了 https://www.passwordstore.org/ 这个项目，我认为完美的契合我的需求，额外的，它足够轻量，在 PC 端也是命令行优先，功能也足够用，第三方适配的 app 也十分简洁，这里做一次记录和推荐。</p>
+<span id="continue-reading"></span><h2 id="an-zhuang">安装</h2>
+<p>从各个系统的包管理器安装即可，比如 pacman / brew / apt 等等</p>
+<blockquote>
+<p>brew install pass</p>
+</blockquote>
+<h2 id="tong-bu">同步</h2>
+<p>可以直接通过 git repo 同步，可以自建，也可以用服务，我使用 github pricate repo 同步。</p>
+<p>这里涉及到稍微麻烦的一点是 ssh key 的同步和 gpg key 的同步。</p>
+<p>多台 PC 间，我直接通过内网拷贝，然后 gpg 导入，设计到几个命令</p>
+<p>导出：</p>
+<ol>
+<li>查看 ID</li>
+</ol>
+<blockquote>
+<p>gpg -K --keyid-format=long</p>
+</blockquote>
+<ol start="2">
+<li>导出公钥</li>
+</ol>
+<blockquote>
+<p>gpg -a --export XXXX</p>
+</blockquote>
+<ol start="3">
+<li>导出私钥</li>
+</ol>
+<blockquote>
+<p>gpg -a --export-secret-key XXX</p>
+</blockquote>
+<p>然后到另一台 PC 进行导入</p>
+<blockquote>
+<p>cat pub.k | gpg --import</p>
+<p>cat sec.k | gpg --allow-secret-key-import --import</p>
+</blockquote>
+<p>在 mac 上可能会出现问题比如:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>gpg: error building skey array: Inappropriate ioctl for device
+</span><span>gpg: error reading &#39;[stdin]&#39;: Inappropriate ioctl for device
+</span><span>gpg: import from &#39;[stdin]&#39; failed: Inappropriate ioctl for device
+</span><span>gpg: Total number processed: 0
+</span><span>gpg:              unchanged: 1
+</span><span>gpg:       secret keys read: 1
+</span></code></pre>
+<p>运行命令前，设置 <code>export GPG_TTY=$(tty)</code> 即可</p>
+<p>移动端同样通过内网的 http 传输即可</p>
+<p>另外还有一个选择，就是利用 keybase 这款软件，将 gpg 公私钥都上传，然后同步。</p>
+
+        </div>
+
+        
+    </div>
+
+    </div>
+
+    
+    <footer class="footer">
+        <div class="footer__inner">
+                <div class="copyright copyright--user">&copy; Copyright 2024 by&nbsp<a href="https://chux0519.github.io">chux0519</a>.</div>
+            </div>
+    </footer>
+    
+
+</div>
+</body>
+
+</html>

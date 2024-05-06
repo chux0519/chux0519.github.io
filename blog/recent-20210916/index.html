@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="robots" content="noodp"/>
+
+    <link rel="stylesheet" href="https://chux0519.github.io/style.css">
+    <link rel="stylesheet" href="https://chux0519.github.io/color/hexyoungs.css">
+
+    <link rel="stylesheet" href="https://chux0519.github.io/font-hack-subset.css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="https://chux0519.github.io/rss.xml">
+
+
+        <link rel="shortcut icon" type="image&#x2F;png" href="/favicon.png">
+    
+    </head>
+
+<body class="">
+<div class="container">
+    
+    <header class="header">
+        <div class="header__inner">
+            <div class="header__logo">
+                    
+                <a href="https://chux0519.github.io" style="text-decoration: none;">
+                    <div class="logo">
+                            chux0519
+                        </div>
+                </a>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <ul class="menu__inner">
+                <li><a href="https://chux0519.github.io">main</a></li>
+            
+                <li class="active"><a href="https://chux0519.github.io/blog">blog</a></li>
+            
+                <li><a href="https://chux0519.github.io/projects">projects</a></li>
+            
+                <li><a href="https://github.com/chux0519" target="_blank" rel="noopener noreferrer">github</a></li>
+            </ul>
+        </nav>
+    
+    </header>
+    
+
+    <div class="content">
+        
+    <div class="post">
+        
+    <h1 class="post-title"><a href="https://chux0519.github.io/blog/recent-20210916/">近况(20210916)</a></h1>
+    <div class="post-meta-inline">
+        
+    <span class="post-date">
+            2021-09-16
+        </span>
+
+    </div>
+
+    
+
+        
+        <div class="post-content">
+            <p>很久没有更新过博文，今天听到一期播客，提到留到点什么，于是又打开了编辑器，记录一下自己的近况。</p>
+<h2 id="guan-yu-nian-du-mu-biao">关于年度目标</h2>
+<p>先说今年初定下的目标吧，今年有学习 iOS 开发的目标，自己其实也边学边做了一款 <a href="https://apps.apple.com/cn/app/%E5%83%8F%E7%B4%A0%E7%94%BB%E5%AE%B6/id1546046976#?platform=iphone">APP</a>。但做完之后，觉得索然无味。</p>
+<p>心底有些打鼓，也有些疑问，也许是苹果的各种负面新闻，也许是自己内心并不喜欢苹果的开发流程。</p>
+<p>某些功能需要付费的开发者帐号，某些组件很难找到详细文档，甚至项目写完后，一段时间没动，Xcode 升级，项目编译不过了，这些让我觉得很糟心，作为开发者，我甚至都认为我也是苹果的一件商品，它可以随时抛弃我。</p>
+<span id="continue-reading"></span>
+<p>总之，iOS 开发者这件事我可能不再会坚持下去，但我仍会向独立开发者的目标前进，只是也许不在 iOS/OSX 平台，之前的练手 APP，在之后我可能会开源，并且可能放弃维护。</p>
+<p>这个经历让我有一些体会，那就是做出一件产品可能并不难，更难的是通过它去盈利，商业模式，运营这些也是占及其巨大的比例。</p>
+<h2 id="kai-yuan">开源</h2>
+<p>最近除了这件事，我又对之前的 pegascoks 这个项目进行了持续更新，有趣的是，这个软件似乎真的有超级认真使用的用户。</p>
+<p>是一个伊朗的开发者，也让我了解到，伊朗也是有墙的，伊朗很多人还在用 shadowsocks(R)，最近添加了更多功能，重构了部分代码，我开始把它当成一个认真的项目对待，不再是学习向玩具向的项目了。</p>
+<p>写得越多，看得越多，我才发现，有很多 C 写的人类瑰宝，比如 libcorkipset，我第一次学习到二元决策图( BDD )这种数据结构，同时也见识了成熟的 C 代码是什么样子的，怎么合理利用 macro 解决代码重复代码大的问题，这让我感到开心。</p>
+<p>提到开源项目，其实靠开源项目也是可以盈利的，最近在 twitter 时间线看到某个讲解 github sponsor 的视频，真是会哭的孩子有奶吃的真实例子。稍微遗憾的是，这个 sponsor 不支持中国大陆，但我相信这并不是唯一的途径。</p>
+<h2 id="gong-zuo">工作</h2>
+<p>对了，最近工作在用 golang，写起来很轻块，也有愉悦的感觉，我觉得我现在已经对编程语言没有什么执念或是严重的偏好了，能用，能把事情搞定，就是好的，一个项目往往难得是它核心的业务逻辑，或是一些算法，相比语言来讲，我们的精力应该更集中在这上面。</p>
+<p>最近还接触到了 badger，是一个 golang 的 kv 数据库，客户在 windows 上遇到过掉电数据库损坏崩溃的事，也追查了好几天，最终才了解到，是其中一个库的问题。</p>
+<p>浏览了 badger 的代码，和之前参加 pingcap 的某个竞赛，我看到的一篇文章一样，它也是用同样的思路，用 WAL，分离 value 到单独的 log，以此提高在 SSD 上的性能。</p>
+<p>windows 上遇到的那个问题和 memtable 的实现有关，memtable 是用 mmap 实现的，在落盘时，会进行 msync 这个 POSIX 上的系统调用，但它在 windows 下并有被实现，被作者跳过了，查阅资料后，补全这一部分就修复了问题，即使掉电数据库损坏，也可以恢复一部分数据避免启动崩溃。</p>
+<p>但实际上 windows 上还有其他问题，比如 <code>O_SYNC</code> 的行为不正常，这是一个 golang 的相关 issue，相关的链接:</p>
+<ul>
+<li><a href="https://discuss.dgraph.io/t/panics-when-opening-a-corrupted-badger-db/14016/3">panics-when-opening-a-corrupted-badger-db</a></li>
+<li><a href="https://discuss.dgraph.io/t/v3-2103-0-db-crash-after-power-loss/14676">v3-2103-0-db-crash-after-power-loss</a></li>
+<li><a href="https://github.com/dgraph-io/ristretto/pull/283">ristretto</a></li>
+<li><a href="https://github.com/golang/go/issues/35358">O_SYNC not utilized in os.OpenFile() on Windows</a></li>
+</ul>
+<p>另外吐槽一下，badger 的 issue 迁移后，非常难用，刚注册不久的用户不能粘贴超过 3 个链接，不能在同一个 issue 下回复超过 3 条。</p>
+<h2 id="jie-yu">结语</h2>
+<p>脑子里暂时没有更多想要表达的了，哦对了，最近又开始坚持锻炼了，希望自己健康一些，好的身体状况总是可以带来好的情绪，就这样，继续好好生活，好好工作。</p>
+
+        </div>
+
+        
+    </div>
+
+    </div>
+
+    
+    <footer class="footer">
+        <div class="footer__inner">
+                <div class="copyright copyright--user">&copy; Copyright 2024 by&nbsp<a href="https://chux0519.github.io">chux0519</a>.</div>
+            </div>
+    </footer>
+    
+
+</div>
+</body>
+
+</html>

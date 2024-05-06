@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="robots" content="noodp"/>
+
+    <link rel="stylesheet" href="https://chux0519.github.io/style.css">
+    <link rel="stylesheet" href="https://chux0519.github.io/color/hexyoungs.css">
+
+    <link rel="stylesheet" href="https://chux0519.github.io/font-hack-subset.css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="https://chux0519.github.io/rss.xml">
+
+
+        <link rel="shortcut icon" type="image&#x2F;png" href="/favicon.png">
+    
+    </head>
+
+<body class="">
+<div class="container">
+    
+    <header class="header">
+        <div class="header__inner">
+            <div class="header__logo">
+                    
+                <a href="https://chux0519.github.io" style="text-decoration: none;">
+                    <div class="logo">
+                            chux0519
+                        </div>
+                </a>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <ul class="menu__inner">
+                <li><a href="https://chux0519.github.io">main</a></li>
+            
+                <li><a href="https://chux0519.github.io/blog">blog</a></li>
+            
+                <li class="active"><a href="https://chux0519.github.io/projects">projects</a></li>
+            
+                <li><a href="https://github.com/chux0519" target="_blank" rel="noopener noreferrer">github</a></li>
+            </ul>
+        </nav>
+    
+    </header>
+    
+
+    <div class="content">
+        
+    <div class="post">
+        
+    <h1 class="post-title"><a href="https://chux0519.github.io/projects/main/">个人项目</a></h1>
+    <div class="post-meta-inline">
+        
+    <span class="post-date"></span>
+
+    </div>
+
+    
+
+        
+        <div class="post-content">
+            <h2 id="wayab">wayab</h2>
+<video  width="100%" autoplay loop controls>
+    <source src="https://user-images.githubusercontent.com/14276970/144039851-497ed32e-fd20-4b27-9c84-86b1bab2fccd.mp4" type="video/mp4">
+    您的浏览器不支持 video 标签
+</video>
+<p>wayland 下动态壁纸软件，支持多屏幕输出，使用 GPU 实现（初衷就是发现有个开源项目 cpu 的实现十分占用资源，于是简单实现了一版）</p>
+<p>项目地址：<a href="https://github.com/chux0519/wayab">wayab</a></p>
+<hr />
+<h2 id="runcat-tray">runcat-tray</h2>
+<img src="https://raw.githubusercontent.com/chux0519/runcat-tray/master/runcat.gif" width="36"/>
+<img src="https://c.tenor.com/5IWFYb4D1WMAAAAi/swan_hack-dab.gif" width="36" />
+<img src="https://github.githubassets.com/images/mona-loading-default.gif" width="36" />
+<img src="https://cultofthepartyparrot.com/guests/hd/partyblobcat.gif" width="36" />
+<p>Linux 下的 runcat，支持自定义图标</p>
+<p>项目地址：<a href="https://github.com/chux0519/runcat-tray">runcat-tray</a></p>
+<hr />
+<h2 id="pegasocks">pegasocks</h2>
+<img style="margin: 15px;" src="https://raw.githubusercontent.com/chux0519/pegasocks/master/logo/icon.svg" width="150" align="left" />
+<p>用 C 编写的轻量级代理客户端</p>
+<p>支持多种协议（v2ray, trojan-gfw, trojan-go 等）</p>
+<p>与其他大多数支持多协议的客户端不同</p>
+<p>pegasocks 不依赖各种第三方 core(比如 v2ray-core 等)，而是真的去实现相关协议的拆装，并且尽可能的照顾性能。</p>
+<p>因此它</p>
+<ol>
+<li>🍃 足够轻量，没有 QT 或是 boost 或是其他第三方二进制的依赖。</li>
+<li>🚀 性能优先，默认多个 worker 线程，因此理论上吞吐量会比较高（待benchmark）</li>
+<li>❌ 没有 GUI，可以直接配合 systemd, launchd, rc 或是各种自定义脚本配置开机启动。后期计划开发一个简单的 tray indicator，在系统的托盘里显示，并且提供一些简单的交互，总之重型的 GUI 是不在考虑范围内的。</li>
+</ol>
+<p>项目地址：<a href="https://github.com/chux0519/pegasocks">pegasocks</a></p>
+<hr />
+<h2 id="xiang-su-hua-jia">像素画家</h2>
+<p>iOS 平台上的像素画编辑器</p>
+<img style="display: inline;" width=370 alignment="left" src="https://i.imgur.com/CVHC2gi.png" />
+<img style="display: inline;" width=370 alignment="left" src="https://i.imgur.com/egnDUd0.png" />
+<p>项目链接：<a href="https://apps.apple.com/cn/app/%E5%83%8F%E7%B4%A0%E7%94%BB%E5%AE%B6/id1546046976#?platform=iphone">像素画家</a></p>
+<hr />
+<h2 id="purr">purr</h2>
+<p>是 rust 版本的 <a href="https://github.com/fogleman/primitive">primitive</a> 实现，使用简单的图形，拟合输入的图片。对原始的 go 语言本本做了一些改动，运行速度会比原版的更快。</p>
+<img width="512" src="https://i.imgur.com/oGO2rnR.gif" />
+<p>另外还提供 Qt 版本的跨平台 APP（正在开发中）</p>
+<img src="https://i.imgur.com/6S6s2BB.png" />
+<img src="https://i.imgur.com/CZmpXGQ.png" />
+<p>项目地址：</p>
+<ul>
+<li><a href="https://github.com/hexyoungs/purr">purr</a></li>
+<li><a href="https://github.com/chux0519/purrmitive-qt">purrmitive-qt</a></li>
+</ul>
+<hr />
+<h2 id="c8-emu">c8-emu</h2>
+<p>是一个 chip8 模拟器，c++ 编写，利用了 Qt5 做界面，支持打开断点、单步运行等功能。</p>
+<p><img src="https://raw.githubusercontent.com/chux0519/c8-emu/master/images/example.png" alt="example" /></p>
+<p>项目地址：<a href="https://github.com/chux0519/c8-emu">c8-emu</a></p>
+
+        </div>
+
+        
+    </div>
+
+    </div>
+
+    
+    <footer class="footer">
+        <div class="footer__inner">
+                <div class="copyright copyright--user">&copy; Copyright 2024 by&nbsp<a href="https://chux0519.github.io">chux0519</a>.</div>
+            </div>
+    </footer>
+    
+
+</div>
+</body>
+
+</html>

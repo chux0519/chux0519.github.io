@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="robots" content="noodp"/>
+
+    <link rel="stylesheet" href="https://chux0519.github.io/style.css">
+    <link rel="stylesheet" href="https://chux0519.github.io/color/hexyoungs.css">
+
+    <link rel="stylesheet" href="https://chux0519.github.io/font-hack-subset.css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="https://chux0519.github.io/rss.xml">
+
+
+        <link rel="shortcut icon" type="image&#x2F;png" href="/favicon.png">
+    
+    </head>
+
+<body class="">
+<div class="container">
+    
+    <header class="header">
+        <div class="header__inner">
+            <div class="header__logo">
+                    
+                <a href="https://chux0519.github.io" style="text-decoration: none;">
+                    <div class="logo">
+                            chux0519
+                        </div>
+                </a>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <ul class="menu__inner">
+                <li><a href="https://chux0519.github.io">main</a></li>
+            
+                <li class="active"><a href="https://chux0519.github.io/blog">blog</a></li>
+            
+                <li><a href="https://chux0519.github.io/projects">projects</a></li>
+            
+                <li><a href="https://github.com/chux0519" target="_blank" rel="noopener noreferrer">github</a></li>
+            </ul>
+        </nav>
+    
+    </header>
+    
+
+    <div class="content">
+        
+    <div class="post">
+        
+    <h1 class="post-title"><a href="https://chux0519.github.io/blog/non-blocking-tornado/">Non Blocking Tornado</a></h1>
+    <div class="post-meta-inline">
+        
+    <span class="post-date">
+            2020-06-09
+        </span>
+
+    </div>
+
+    
+
+        
+        <div class="post-content">
+            <p>tornado 是一个 python 的高性能 web 框架。最近在工作中遇到一个基于它的项目，在接口处该项目使用了大量的同步 io （数据库操作是同步的），意味着，某一时刻，在数据库 io 操作的时候，主线程是被阻塞的。这时新进来的请求得不到及时处理，会影响吞吐量。用户请求排队的时间也会变长。这里记录两种修改方式，提高吞吐量，使得这些操作不阻塞主线程。</p>
+<span id="continue-reading"></span>
+<p>优化思路有两个，一个是引入异步的数据库框架，逐步替换代码中访问频率高或是慢的api handler 代码，这样可以从根源上改变代码的运行模式，是 真×异步。</p>
+<p>另一个思路是，利用 ThreadPoolExecutor，创建一个全局的线程池，同步的io可以全部扔到这里面，主线程不会被阻塞，代码逻辑很复杂，不便修改时，可以采用这个思路，好处是代码改动少。</p>
+<p>下面举例说明如何修改</p>
+<h3 id="si-lu-yi-li-yong-yi-bu-io">思路一，利用异步io</h3>
+<p>主要是用 aiopg 这个库去执行数据库操作。</p>
+<p>这时直接将 API handler 定义为 async，比如 <code>async get</code>，<code>async post</code> 等。这时新的代码和老的代码区别在于对数据库的操作，从之前的 SQLAlchemy 到 aiopg。给个例子进行说明：</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>    </span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">get</span><span>(</span><span style="color:#bf616a;">self</span><span>):
+</span><span>        items = </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">get_all_items</span><span>()
+</span><span>        </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">write_jsonify</span><span>(books)
+</span><span style="color:#d08770;">...
+</span><span>    </span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">get_all_items</span><span>(</span><span style="color:#bf616a;">self</span><span>):
+</span><span>        ret = []
+</span><span>        q = &quot;</span><span style="color:#a3be8c;">select a from foo</span><span>&quot;
+</span><span>        items = </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">execute</span><span>(q)
+</span><span>        </span><span style="color:#b48ead;">for </span><span>row </span><span style="color:#b48ead;">in </span><span>items:
+</span><span>            item = row.a </span><span style="color:#65737e;"># 处理逻辑，可以通过 row.a 访问到 a 字段
+</span><span>            ret.</span><span style="color:#bf616a;">append</span><span>(item)
+</span><span>        </span><span style="color:#b48ead;">return </span><span>ret
+</span></code></pre>
+<p>self.execute 是对 aiopg 操作的简单封装，见下面的代码</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>    </span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">execute</span><span>(</span><span style="color:#bf616a;">self</span><span>, </span><span style="color:#bf616a;">q</span><span>, </span><span style="color:#bf616a;">n</span><span>=</span><span style="color:#d08770;">None</span><span>):
+</span><span>        </span><span style="color:#b48ead;">async with </span><span style="color:#bf616a;">self</span><span>.aiodb.</span><span style="color:#bf616a;">acquire</span><span>() </span><span style="color:#b48ead;">as </span><span>conn:
+</span><span>            </span><span style="color:#b48ead;">if </span><span>n is </span><span style="color:#d08770;">None</span><span>:
+</span><span>                </span><span style="color:#b48ead;">return await </span><span>(</span><span style="color:#b48ead;">await </span><span>conn.</span><span style="color:#bf616a;">execute</span><span>(q)).</span><span style="color:#bf616a;">fetchall</span><span>()
+</span><span>            </span><span style="color:#b48ead;">elif </span><span>n == </span><span style="color:#d08770;">1</span><span>:
+</span><span>                </span><span style="color:#b48ead;">return await </span><span>(</span><span style="color:#b48ead;">await </span><span>conn.</span><span style="color:#bf616a;">execute</span><span>(q)).</span><span style="color:#bf616a;">first</span><span>()
+</span><span>            </span><span style="color:#b48ead;">else</span><span>:
+</span><span>                </span><span style="color:#b48ead;">return await </span><span>(</span><span style="color:#b48ead;">await </span><span>conn.</span><span style="color:#bf616a;">execute</span><span>(q)).</span><span style="color:#bf616a;">fetchmany</span><span>(n)
+</span></code></pre>
+<p>更复杂的使用（事务等等），在需要时，参考 aiopg 文档。</p>
+<h3 id="si-lu-er-li-yong-xian-cheng-chi">思路二，利用线程池</h3>
+<p>当 handler 的逻辑比较复杂，全部改异步 io 十分麻烦时，可以考虑用这个方式，成本更低，改动更少。</p>
+<p>我们在主线程创建一个全局的线程池，然后将想要重构的接口 <code>get</code> / <code>post</code> 等，加上一个装饰器，最后将 <code>self.write()</code> 的结果返回。
+举个例子，假设某个同步 io 接口如下</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>     @tornado.web.</span><span style="color:#bf616a;">authenticated
+</span><span>     </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">get</span><span>(</span><span style="color:#bf616a;">self</span><span>):
+</span><span>         items = </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">get_items</span><span>()
+</span><span>         </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">write_jsonify</span><span>(items)
+</span></code></pre>
+<p>修改的 diff 为</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>     @tornado.web.</span><span style="color:#bf616a;">authenticated
+</span><span>+    @unblock
+</span><span>     </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">get</span><span>(</span><span style="color:#bf616a;">self</span><span>):
+</span><span>         items = </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">get_items</span><span>()
+</span><span>-        </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">write_jsonify</span><span>(items)
+</span><span>+        </span><span style="color:#b48ead;">return </span><span>items
+</span></code></pre>
+<p>需要注意的是，在 handler 内部，尽量不要调用 <code>self.write</code> 这类对请求响应的操作（这类操作不是线程安全的，装饰器里面会在主线程进行写操作）。所以 <code>self.write_execption</code> 之类的最好直接 raise，最后在主线程会写给用户。”最好不“不代表不能用，实际上我在测试时，使用过这写方法，没有遇到问题，但是还是尽量不要使用，避免奇怪的问题，实在很难改，已经用到了，要充分测试。</p>
+<p>unblock 装饰器的实现类似 tornado 的 <code>run_on_executor</code>，但是简化了很多，直接将整个 api handler 的逻辑都放到了线程池，不用更多的代码修改了。下面是实现</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">unblock</span><span>(</span><span style="color:#bf616a;">http_method</span><span>):
+</span><span>    @tornado.web.</span><span style="color:#bf616a;">asynchronous
+</span><span>    @functools.</span><span style="color:#bf616a;">wraps</span><span>(http_method)
+</span><span>    </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">_wrapper</span><span>(</span><span style="color:#bf616a;">self</span><span>, *</span><span style="color:#bf616a;">args</span><span>, **</span><span style="color:#bf616a;">kwargs</span><span>):
+</span><span>        </span><span style="color:#65737e;"># callback must be called on the main thread
+</span><span>        </span><span style="color:#65737e;"># self.write(),self.finish() etc are not thread safe
+</span><span>        </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">callback</span><span>(</span><span style="color:#bf616a;">future</span><span>):
+</span><span>            res = future.</span><span style="color:#bf616a;">result</span><span>()
+</span><span>            </span><span style="color:#b48ead;">if </span><span>res is </span><span style="color:#d08770;">None</span><span>:
+</span><span>                </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">finish</span><span>()
+</span><span>                </span><span style="color:#b48ead;">return
+</span><span>            </span><span style="color:#b48ead;">if </span><span>not </span><span style="color:#96b5b4;">isinstance</span><span>(res, str):
+</span><span>                res = </span><span style="color:#bf616a;">json_dumps</span><span>(res)
+</span><span>            </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">write</span><span>(res)
+</span><span>            </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">finish</span><span>()
+</span><span>        _future = EXECUTOR.</span><span style="color:#bf616a;">submit</span><span>(
+</span><span>            functools.</span><span style="color:#bf616a;">partial</span><span>(http_method, </span><span style="color:#bf616a;">self</span><span>, *args, **kwargs)
+</span><span>        )
+</span><span>        ioloop.IOLoop.</span><span style="color:#bf616a;">instance</span><span>().</span><span style="color:#bf616a;">add_future</span><span>(_future, callback)
+</span><span>    </span><span style="color:#b48ead;">return </span><span>_wrapper
+</span></code></pre>
+<p>这里给出一个完整的例子</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">import </span><span>tornado.ioloop
+</span><span style="color:#b48ead;">import </span><span>tornado.web
+</span><span style="color:#b48ead;">import </span><span>time
+</span><span style="color:#b48ead;">import </span><span>functools
+</span><span style="color:#b48ead;">from </span><span>concurrent.futures </span><span style="color:#b48ead;">import </span><span>ThreadPoolExecutor
+</span><span>
+</span><span style="color:#bf616a;">EXECUTOR </span><span>= </span><span style="color:#bf616a;">ThreadPoolExecutor</span><span>(</span><span style="color:#d08770;">50</span><span>)
+</span><span>
+</span><span>
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">unblock</span><span>(</span><span style="color:#bf616a;">http_method</span><span>):
+</span><span>    @tornado.web.</span><span style="color:#bf616a;">asynchronous
+</span><span>    @functools.</span><span style="color:#bf616a;">wraps</span><span>(http_method)
+</span><span>    </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">_wrapper</span><span>(</span><span style="color:#bf616a;">self</span><span>, *</span><span style="color:#bf616a;">args</span><span>, **</span><span style="color:#bf616a;">kwargs</span><span>):
+</span><span>        </span><span style="color:#65737e;"># callback must be called on the main thread
+</span><span>        </span><span style="color:#65737e;"># self.write(),self.finish() etc are not thread safe
+</span><span>        </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">callback</span><span>(</span><span style="color:#bf616a;">future</span><span>):
+</span><span>            res = future.</span><span style="color:#bf616a;">result</span><span>()
+</span><span>            </span><span style="color:#b48ead;">if </span><span>res is </span><span style="color:#d08770;">None</span><span>:
+</span><span>                </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">finish</span><span>()
+</span><span>                </span><span style="color:#b48ead;">return
+</span><span>            </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">write</span><span>(res)
+</span><span>            </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">finish</span><span>()
+</span><span>        _future = EXECUTOR.</span><span style="color:#bf616a;">submit</span><span>(
+</span><span>            functools.</span><span style="color:#bf616a;">partial</span><span>(http_method, </span><span style="color:#bf616a;">self</span><span>, *args, **kwargs)
+</span><span>        )
+</span><span>        tornado.ioloop.IOLoop.</span><span style="color:#bf616a;">instance</span><span>().</span><span style="color:#bf616a;">add_future</span><span>(_future, callback)
+</span><span>    </span><span style="color:#b48ead;">return </span><span>_wrapper
+</span><span>
+</span><span>
+</span><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">MainHandler</span><span style="color:#eff1f5;">(</span><span style="color:#a3be8c;">tornado.web.RequestHandler</span><span style="color:#eff1f5;">):
+</span><span>    @</span><span style="color:#bf616a;">unblock
+</span><span>    </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">get</span><span>(</span><span style="color:#bf616a;">self</span><span>):
+</span><span>        time.</span><span style="color:#bf616a;">sleep</span><span>(</span><span style="color:#d08770;">0.5</span><span>)
+</span><span>        </span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#bf616a;">write</span><span>(&quot;</span><span style="color:#a3be8c;">Hello, world</span><span>&quot;)
+</span><span>
+</span><span>
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">make_app</span><span>():
+</span><span>    </span><span style="color:#b48ead;">return </span><span>tornado.web.</span><span style="color:#bf616a;">Application</span><span>([
+</span><span>        (</span><span style="color:#b48ead;">r</span><span>&quot;</span><span style="color:#a3be8c;">/</span><span>&quot;, MainHandler),
+</span><span>    ])
+</span><span>
+</span><span>
+</span><span style="color:#b48ead;">if </span><span>__name__ == &quot;</span><span style="color:#a3be8c;">__main__</span><span>&quot;:
+</span><span>    app = </span><span style="color:#bf616a;">make_app</span><span>()
+</span><span>    app.</span><span style="color:#bf616a;">listen</span><span>(</span><span style="color:#d08770;">8888</span><span>)
+</span><span>    tornado.ioloop.IOLoop.</span><span style="color:#bf616a;">current</span><span>().</span><span style="color:#bf616a;">start</span><span>()
+</span></code></pre>
+<p>运行后，使用 <code>wrk</code> 进行 benchmark 可以看到区别。</p>
+<p>同步版本
+<img src="https://chux0519.github.io/blog/non-blocking-tornado/02.png" alt="" /></p>
+<p>用了线程池的同步版本
+<img src="https://chux0519.github.io/blog/non-blocking-tornado/03.png" alt="" /></p>
+<h3 id="zui-hou">最后</h3>
+<p>在涉及 io 操作的地方，能使用异步的方式就使用，比如 redis，http 请求，数据库连接等等，避免阻塞主线程</p>
+
+        </div>
+
+        
+    </div>
+
+    </div>
+
+    
+    <footer class="footer">
+        <div class="footer__inner">
+                <div class="copyright copyright--user">&copy; Copyright 2024 by&nbsp<a href="https://chux0519.github.io">chux0519</a>.</div>
+            </div>
+    </footer>
+    
+
+</div>
+</body>
+
+</html>

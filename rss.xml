@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title></title>
+      <link>https://chux0519.github.io</link>
+      <description></description>
+      <generator>Zola</generator>
+      <language>en</language>
+      <atom:link href="https://chux0519.github.io/rss.xml" rel="self" type="application/rss+xml"/>
+      <lastBuildDate>Wed, 01 May 2024 23:43:25 +0000</lastBuildDate>
+      <item>
+          <title>LML - linear regression</title>
+          <pubDate>Wed, 01 May 2024 23:43:25 +0000</pubDate>
+          <author>Unknown</author>
+          <link>https://chux0519.github.io/blog/lml-linear/</link>
+          <guid>https://chux0519.github.io/blog/lml-linear/</guid>
+          <description xml:base="https://chux0519.github.io/blog/lml-linear/">&lt;p&gt;LML 是 Learn Machine Learning 的缩写，我会用文字和代码，从一个程序员的角度，记录下自己这段时间学习机器学习的过程。&lt;&#x2F;p&gt;
+&lt;p&gt;这是第一篇：线性回归（与 softmax 回归）&lt;&#x2F;p&gt;
+</description>
+      </item>
+      <item>
+          <title>liburing - cat</title>
+          <pubDate>Mon, 11 Oct 2021 11:15:15 +0800</pubDate>
+          <author>Unknown</author>
+          <link>https://chux0519.github.io/blog/io-uring-02/</link>
+          <guid>https://chux0519.github.io/blog/io-uring-02/</guid>
+          <description xml:base="https://chux0519.github.io/blog/io-uring-02/">&lt;p&gt;结合&lt;a href=&quot;&#x2F;blog&#x2F;io-uring-01&#x2F;&quot;&gt;上回&lt;&#x2F;a&gt;，大部分代码是样板代码，liburing 是为了简化我们手工调用 io_uring 实现的一个包装库&lt;&#x2F;p&gt;
+&lt;p&gt;接下来用 liburing 实现 cat&lt;&#x2F;p&gt;
+</description>
+      </item>
+      <item>
+          <title>io_uring 接口</title>
+          <pubDate>Sun, 10 Oct 2021 14:30:15 +0800</pubDate>
+          <author>Unknown</author>
+          <link>https://chux0519.github.io/blog/io-uring-01/</link>
+          <guid>https://chux0519.github.io/blog/io-uring-01/</guid>
+          <description xml:base="https://chux0519.github.io/blog/io-uring-01/">&lt;p&gt;接&lt;a href=&quot;&#x2F;blog&#x2F;io-uring-00&#x2F;&quot;&gt;上回&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;目前来讲，用户应该使用 liburing，不太需要去直接调用底层的 io_uring API，但是去了解 io_uring 本身提供哪些接口是非常有必要的。&lt;&#x2F;p&gt;
+&lt;p&gt;接下来会通过一个类似 cat 的程序，来讲解 io_uring 的一些操作。&lt;&#x2F;p&gt;
+</description>
+      </item>
+      <item>
+          <title>io_uring 简介</title>
+          <pubDate>Sun, 10 Oct 2021 13:30:15 +0800</pubDate>
+          <author>Unknown</author>
+          <link>https://chux0519.github.io/blog/io-uring-00/</link>
+          <guid>https://chux0519.github.io/blog/io-uring-00/</guid>
+          <description xml:base="https://chux0519.github.io/blog/io-uring-00/">&lt;h2 id=&quot;shen-me-shi-io-uring&quot;&gt;什么是 io_uring&lt;&#x2F;h2&gt;
+&lt;p&gt;它是 Linux 下的，新的异步 IO 的 API，由 Facebook 工程师 Jens Axboe created 出来。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;yi-you-jie-jue-fang-an-de-ju-xian&quot;&gt;已有解决方案的局限&lt;&#x2F;h3&gt;
+&lt;p&gt;aio 是 Linux 中已有的异步 IO 系统调用，支持文件和 socket，但是有一些局限&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;只支持 O_DIRECT 模式的读写，这是最大的局限性，而现实世界中，几乎没有应用有这种常规性质需求&lt;&#x2F;li&gt;
+&lt;li&gt;即使在 O_DIRECT 下，aio 也可能因为 metadata 缺失导致 block&lt;&#x2F;li&gt;
+&lt;li&gt;某些存储设备有固定的请求队列大小( slots for request，个人理解类似 socket 的 backlog)，队列满时，aio 的提交也会 block&lt;&#x2F;li&gt;
+&lt;li&gt;提交和完成过程，会有 104 字节的额外拷贝开销，提交和完成也会产生两个不同的系统调用&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</description>
+      </item>
+      <item>
+          <title>密码管理器</title>
+          <pubDate>Sun, 03 Oct 2021 11:25:15 +0800</pubDate>
+          <author>Unknown</author>
+          <link>https://chux0519.github.io/blog/pass/</link>
+          <guid>https://chux0519.github.io/blog/pass/</guid>
+          <description xml:base="https://chux0519.github.io/blog/pass/">&lt;p&gt;随着使用的软件、服务越来越多，我们需要记忆的密码也越变越多，为了安全性，应该避免使用弱密码或重复的密码，于是我之前选择了 1password 这个服务，前两个月我的订阅刚刚过期，但我又不再想续订了，我认为这个产品我没有花得很值，于是调研了一些替代品，我的需求是，可以同步、可以方便的在多端使用。&lt;&#x2F;p&gt;
+&lt;p&gt;最终看到了 https:&#x2F;&#x2F;www.passwordstore.org&#x2F; 这个项目，我认为完美的契合我的需求，额外的，它足够轻量，在 PC 端也是命令行优先，功能也足够用，第三方适配的 app 也十分简洁，这里做一次记录和推荐。&lt;&#x2F;p&gt;
+</description>
+      </item>
+      <item>
+          <title>近况(20210916)</title>
+          <pubDate>Thu, 16 Sep 2021 22:46:15 +0800</pubDate>
+          <author>Unknown</author>
+          <link>https://chux0519.github.io/blog/recent-20210916/</link>
+          <guid>https://chux0519.github.io/blog/recent-20210916/</guid>
+          <description xml:base="https://chux0519.github.io/blog/recent-20210916/">&lt;p&gt;很久没有更新过博文，今天听到一期播客，提到留到点什么，于是又打开了编辑器，记录一下自己的近况。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;guan-yu-nian-du-mu-biao&quot;&gt;关于年度目标&lt;&#x2F;h2&gt;
+&lt;p&gt;先说今年初定下的目标吧，今年有学习 iOS 开发的目标，自己其实也边学边做了一款 &lt;a href=&quot;https:&#x2F;&#x2F;apps.apple.com&#x2F;cn&#x2F;app&#x2F;%E5%83%8F%E7%B4%A0%E7%94%BB%E5%AE%B6&#x2F;id1546046976#?platform=iphone&quot;&gt;APP&lt;&#x2F;a&gt;。但做完之后，觉得索然无味。&lt;&#x2F;p&gt;
+&lt;p&gt;心底有些打鼓，也有些疑问，也许是苹果的各种负面新闻，也许是自己内心并不喜欢苹果的开发流程。&lt;&#x2F;p&gt;
+&lt;p&gt;某些功能需要付费的开发者帐号，某些组件很难找到详细文档，甚至项目写完后，一段时间没动，Xcode 升级，项目编译不过了，这些让我觉得很糟心，作为开发者，我甚至都认为我也是苹果的一件商品，它可以随时抛弃我。&lt;&#x2F;p&gt;
+</description>
+      </item>
+      <item>
+          <title>写在2021</title>
+          <pubDate>Tue, 19 Jan 2021 15:08:15 +0800</pubDate>
+          <author>Unknown</author>
+          <link>https://chux0519.github.io/blog/2021/</link>
+          <guid>https://chux0519.github.io/blog/2021/</guid>
+          <description xml:base="https://chux0519.github.io/blog/2021/">&lt;p&gt;2021 年已经过了 19 天了，前一段时间常在网络上看到各种总结和展望。&lt;&#x2F;p&gt;
+&lt;p&gt;由于自己太懒，不想刻意去回想过去一年里做了些什么，或者回想对我而言，已经变得费力了。&lt;&#x2F;p&gt;
+&lt;p&gt;今天心血来潮，写一写脑子里残留的，和脑子里新产生的这些想法。&lt;&#x2F;p&gt;
+</description>
+      </item>
+      <item>
+          <title>CS144 Lab2 学习笔记</title>
+          <pubDate>Fri, 04 Sep 2020 17:58:15 +0800</pubDate>
+          <author>Unknown</author>
+          <link>https://chux0519.github.io/blog/cs144-lab2/</link>
+          <guid>https://chux0519.github.io/blog/cs144-lab2/</guid>
+          <description xml:base="https://chux0519.github.io/blog/cs144-lab2/">&lt;p&gt;CS144 是一门关于计算机网络的斯坦福大学的公开课。课程的实验是动手写一个用户态的 TCP 协议，本文是第三篇。&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;课程链接: https:&#x2F;&#x2F;cs144.github.io&#x2F;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;本文讲义: https:&#x2F;&#x2F;cs144.github.io&#x2F;assignments&#x2F;lab2.pdf&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;本文相关代码: https:&#x2F;&#x2F;github.com&#x2F;hexyoungs&#x2F;tcplab&#x2F;tree&#x2F;lab2&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;update-20200928&quot;&gt;update 20200928&lt;&#x2F;h2&gt;
+&lt;p&gt;2020 年秋季的课程也开始了，网络上之前的 pdf 已经找不到了，故休息一段时间，等课程同步到相关进度后，再继续这个系列。&lt;&#x2F;p&gt;
+</description>
+      </item>
+      <item>
+          <title>CS144 Lab1 学习笔记</title>
+          <pubDate>Fri, 28 Aug 2020 21:16:15 +0800</pubDate>
+          <author>Unknown</author>
+          <link>https://chux0519.github.io/blog/cs144-lab1/</link>
+          <guid>https://chux0519.github.io/blog/cs144-lab1/</guid>
+          <description xml:base="https://chux0519.github.io/blog/cs144-lab1/">&lt;p&gt;CS144 是一门关于计算机网络的斯坦福大学的公开课。课程的实验是动手写一个用户态的 TCP 协议，本文是第二篇。&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;课程链接: https:&#x2F;&#x2F;cs144.github.io&#x2F;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;本文讲义: https:&#x2F;&#x2F;cs144.github.io&#x2F;assignments&#x2F;lab1.pdf&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;本文相关代码: https:&#x2F;&#x2F;github.com&#x2F;hexyoungs&#x2F;tcplab&#x2F;tree&#x2F;lab1&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</description>
+      </item>
+      <item>
+          <title>CS144 Lab0 学习笔记</title>
+          <pubDate>Sun, 23 Aug 2020 13:27:15 +0800</pubDate>
+          <author>Unknown</author>
+          <link>https://chux0519.github.io/blog/cs144-lab0/</link>
+          <guid>https://chux0519.github.io/blog/cs144-lab0/</guid>
+          <description xml:base="https://chux0519.github.io/blog/cs144-lab0/">&lt;p&gt;CS144 是一门关于计算机网络的斯坦福大学的公开课。课程的实验是动手写一个用户态的 TCP 协议，非常吸引我，于是就入坑了。我会用一个系列来记录自己的学习笔记。&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;课程链接: https:&#x2F;&#x2F;cs144.github.io&#x2F;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;本文讲义: https:&#x2F;&#x2F;cs144.github.io&#x2F;assignments&#x2F;lab0.pdf&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;本文相关代码: https:&#x2F;&#x2F;github.com&#x2F;hexyoungs&#x2F;tcplab&#x2F;tree&#x2F;lab0&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</description>
+      </item>
+      <item>
+          <title>爬山算法拟合图片</title>
+          <pubDate>Wed, 19 Aug 2020 13:27:15 +0800</pubDate>
+          <author>Unknown</author>
+          <link>https://chux0519.github.io/blog/purr/</link>
+          <guid>https://chux0519.github.io/blog/purr/</guid>
+          <description xml:base="https://chux0519.github.io/blog/purr/">&lt;p&gt;上次参加 Rusty Days Hackathon 时，用 rust 实现了一下爬山算法。可以做到下面的效果。&lt;&#x2F;p&gt;
+&lt;img style=&quot;display: inline;&quot; src=&quot;https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;chux0519&#x2F;purr&#x2F;master&#x2F;purrmitive&#x2F;assets&#x2F;purr.0.png&quot; width=200 alignment=&quot;left&quot;&#x2F;&gt;
+&lt;img style=&quot;display: inline;&quot; src=&quot;https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;chux0519&#x2F;purr&#x2F;master&#x2F;purrmitive&#x2F;assets&#x2F;purr.1.png&quot; width=200 alignment=&quot;left&quot;&#x2F;&gt;
+&lt;img style=&quot;display: inline;&quot; src=&quot;https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;chux0519&#x2F;purr&#x2F;master&#x2F;purrmitive&#x2F;assets&#x2F;purr.2.png&quot; width=200 alignment=&quot;left&quot;&#x2F;&gt;
+&lt;img style=&quot;display: inline;&quot; src=&quot;https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;chux0519&#x2F;purr&#x2F;master&#x2F;purrmitive&#x2F;assets&#x2F;purr.3.png&quot; width=200 alignment=&quot;left&quot;&#x2F;&gt;
+&lt;img style=&quot;display: inline;&quot; src=&quot;https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;chux0519&#x2F;purr&#x2F;master&#x2F;purrmitive&#x2F;assets&#x2F;input.png&quot; width=200 alignment=&quot;left&quot;&#x2F;&gt;
+&lt;img style=&quot;display: inline;&quot; src=&quot;https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;chux0519&#x2F;purr&#x2F;master&#x2F;purrmitive&#x2F;assets&#x2F;purr.4.png&quot; width=200 alignment=&quot;left&quot;&#x2F;&gt;
+&lt;img style=&quot;display: inline;&quot; src=&quot;https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;chux0519&#x2F;purr&#x2F;master&#x2F;purrmitive&#x2F;assets&#x2F;purr.5.png&quot; width=200 alignment=&quot;left&quot;&#x2F;&gt;
+&lt;img style=&quot;display: inline;&quot; src=&quot;https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;chux0519&#x2F;purr&#x2F;master&#x2F;purrmitive&#x2F;assets&#x2F;purr.7.png&quot; width=200 alignment=&quot;left&quot;&#x2F;&gt;
+&lt;img style=&quot;display: inline;&quot; src=&quot;https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;chux0519&#x2F;purr&#x2F;master&#x2F;purrmitive&#x2F;assets&#x2F;purr.8.png&quot; width=200 alignment=&quot;left&quot;&#x2F;&gt;
+&lt;p&gt;项目地址: https:&#x2F;&#x2F;github.com&#x2F;chux0519&#x2F;purr&lt;&#x2F;p&gt;
+</description>
+      </item>
+      <item>
+          <title>Non Blocking Tornado</title>
+          <pubDate>Tue, 09 Jun 2020 17:31:15 +0800</pubDate>
+          <author>Unknown</author>
+          <link>https://chux0519.github.io/blog/non-blocking-tornado/</link>
+          <guid>https://chux0519.github.io/blog/non-blocking-tornado/</guid>
+          <description xml:base="https://chux0519.github.io/blog/non-blocking-tornado/">&lt;p&gt;tornado 是一个 python 的高性能 web 框架。最近在工作中遇到一个基于它的项目，在接口处该项目使用了大量的同步 io （数据库操作是同步的），意味着，某一时刻，在数据库 io 操作的时候，主线程是被阻塞的。这时新进来的请求得不到及时处理，会影响吞吐量。用户请求排队的时间也会变长。这里记录两种修改方式，提高吞吐量，使得这些操作不阻塞主线程。&lt;&#x2F;p&gt;
+</description>
+      </item>
+    </channel>
+</rss>
